@@ -74,17 +74,48 @@ npm run dev          # http://localhost:3000
 
 ---
 
-## ☁️ Deploying to Cloudflare
+## ☁️ Deploying to Cloudflare Workers
 
-1. `npx wrangler login`
-2. Create the D1 database and copy its `database_id` into `wrangler.jsonc`:
-   ```bash
-   npx wrangler d1 create happy-aquarium-db
-   ```
-3. Create the R2 bucket: `npx wrangler r2 bucket create happy-aquarium-media`
-4. Apply migrations & seed remote: `npm run db:migrate:remote` (then run the seed against remote)
-5. Set secrets: `npx wrangler secret put AUTH_SECRET`
-6. `npm run deploy`
+This is an **OpenNext → Cloudflare Workers** app. Do **not** use plain `next build`,
+GitHub Pages, or a Cloudflare **Pages** project — the deployable artifact is a Worker
+(`.open-next/worker.js`) produced by `opennextjs-cloudflare build`.
+
+### Option A — deploy from your machine (simplest)
+
+```bash
+npx wrangler login
+npx wrangler d1 create happy-aquarium-db          # copy the returned database_id
+# → paste that id into wrangler.jsonc (d1_databases[0].database_id)
+
+# load schema + all seed data onto the remote DB (one shot):
+npx wrangler d1 execute happy-aquarium-db --remote --file drizzle/seed-dump.sql
+
+npx wrangler secret put AUTH_SECRET               # paste any long random string
+npm run deploy                                    # opennextjs-cloudflare build && deploy
+```
+
+You get a free URL like `happy-aquarium.<you>.workers.dev`.
+
+### Option B — Git-connected CI (Cloudflare **Workers** Builds)
+
+Create a **Workers** project (not Pages) from the GitHub repo, then set:
+
+| Setting | Value |
+|---------|-------|
+| Build command | `npx opennextjs-cloudflare build` |
+| Deploy command | `npx wrangler deploy` |
+| Environment variable | `AUTH_SECRET` = *(a long random string)* |
+
+Run the D1 `create` + `seed-dump.sql` execute steps once from your machine (or the
+dashboard console) so the remote database exists and is seeded.
+
+> Regenerating a fresh seed dump: `npx wrangler d1 export happy-aquarium-db --local --output drizzle/seed-dump.sql`
+
+### Free tier
+
+Workers (100k req/day) + D1 (5 GB) cover a local store at **₹0/month**, indefinitely.
+R2 (media uploads) is not wired yet, so no R2 bucket or card is required to go live.
+
 
 ---
 

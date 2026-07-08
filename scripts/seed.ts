@@ -8,6 +8,7 @@
  */
 import { getPlatformProxy } from "wrangler";
 import { drizzle } from "drizzle-orm/d1";
+import type { D1Database } from "@cloudflare/workers-types";
 import * as schema from "../src/db/schema";
 import { hashPassword } from "../src/lib/password";
 import { allCategories } from "../src/db/seed/data-categories";

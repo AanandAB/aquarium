@@ -18,11 +18,5 @@
       "database_id": "00000000-0000-0000-0000-000000000000",
       "migrations_dir": "drizzle/migrations"
     }
-  ],
-  "r2_buckets": [
-    {
-      "binding": "MEDIA",
-      "bucket_name": "happy-aquarium-media"
-    }
   ]
 }
