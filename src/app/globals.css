@@ -1,26 +1,182 @@
 @import "tailwindcss";
 
+/* ==========================================================================
+   Happy Aquarium — "Field Notes from the Water"
+   Editorial nature-documentary design system (Tailwind v4)
+   ========================================================================== */
+
+@theme {
+  /* Paper & ink */
+  --color-paper: #faf6ee;
+  --color-paper-2: #f2ebdc;
+  --color-sand: #e7dcc6;
+  --color-ink: #221d16;
+  --color-ink-2: #57503f;
+
+  /* Water & warmth */
+  --color-teal: #12524a;
+  --color-teal-2: #0c3b35;
+  --color-clay: #b4552e;
+  --color-clay-2: #97411f;
+  --color-sage: #7e8a6c;
+
+  /* Legacy aliases — remap old class names onto the new palette so any
+     un-migrated utility still renders in-system. */
+  --color-softwhite: #221d16;
+  --color-navy: #faf6ee;
+  --color-abyss: #0c3b35;
+  --color-deep: #12524a;
+  --color-aqua: #12524a;
+  --color-turquoise: #0c3b35;
+  --color-seagreen: #7e8a6c;
+  --color-coral: #b4552e;
+  --color-coral-soft: #97411f;
+
+  /* Type */
+  --font-display: var(--font-fraunces), Georgia, "Times New Roman", serif;
+  --font-body: var(--font-inter), ui-sans-serif, system-ui, sans-serif;
+  --font-heading: var(--font-fraunces), Georgia, serif;
+  --font-num: var(--font-inter), ui-sans-serif, sans-serif;
+
+  --ease-out-soft: cubic-bezier(0.22, 1, 0.36, 1);
+}
+
 :root {
-  --background: #ffffff;
-  --foreground: #171717;
+  --bg: #faf6ee;
+  --fg: #221d16;
+  --line: rgba(34, 29, 22, 0.14);
+  --line-strong: rgba(34, 29, 22, 0.28);
 }
 
-@theme inline {
-  --color-background: var(--background);
-  --color-foreground: var(--foreground);
-  --font-sans: var(--font-geist-sans);
-  --font-mono: var(--font-geist-mono);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root {
-    --background: #0a0a0a;
-    --foreground: #ededed;
+@layer base {
+  * {
+    border-color: var(--line);
+  }
+  html {
+    -webkit-text-size-adjust: 100%;
+  }
+  body {
+    background-color: var(--bg);
+    color: var(--fg);
+    font-family: var(--font-body);
+    font-feature-settings: "kern";
+    -webkit-font-smoothing: antialiased;
+    text-rendering: optimizeLegibility;
+    overflow-x: hidden;
+  }
+  h1, h2, h3, h4, h5 {
+    font-family: var(--font-heading);
+    font-weight: 500;
+    letter-spacing: -0.012em;
+    line-height: 1.05;
+    color: var(--color-ink);
+  }
+  ::selection {
+    background: var(--color-clay);
+    color: #fff;
   }
 }
 
-body {
-  background: var(--background);
-  color: var(--foreground);
-  font-family: Arial, Helvetica, sans-serif;
+@layer utilities {
+  .font-display { font-family: var(--font-display); }
+  .font-num {
+    font-family: var(--font-num);
+    font-variant-numeric: tabular-nums;
+  }
+
+  /* Editorial paper card — the single surface primitive (also aliases the
+     old .glass / .glass-strong names so existing markup upgrades for free). */
+  .paper-card,
+  .glass,
+  .glass-strong {
+    background: #fffdf8;
+    border: 1px solid var(--line);
+    box-shadow:
+      0 1px 2px rgba(34, 29, 22, 0.04),
+      0 22px 48px -32px rgba(34, 29, 22, 0.32);
+    backdrop-filter: none;
+    -webkit-backdrop-filter: none;
+  }
+  .card-inset {
+    background: var(--color-paper-2);
+    border: 1px solid var(--line);
+  }
+
+  /* Small uppercase editorial eyebrow / kicker */
+  .eyebrow {
+    font-family: var(--font-body);
+    text-transform: uppercase;
+    letter-spacing: 0.24em;
+    font-size: 0.7rem;
+    font-weight: 600;
+    color: var(--color-clay);
+  }
+  /* Figure-plate caption (documentary feel) */
+  .fig-label {
+    font-family: var(--font-body);
+    font-size: 0.65rem;
+    letter-spacing: 0.18em;
+    text-transform: uppercase;
+    color: var(--color-ink-2);
+  }
+  .rule {
+    border-top: 1px solid var(--line);
+  }
+
+  /* Legacy accent helpers remapped to the editorial language */
+  .text-gradient {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: var(--color-teal);
+  }
+  .text-coral-gradient {
+    background: none;
+    -webkit-text-fill-color: currentColor;
+    color: var(--color-clay);
+  }
+  .ocean-ring {
+    box-shadow: 0 26px 55px -32px rgba(18, 82, 74, 0.45);
+  }
+
+  /* Subtle paper grain overlay */
+  .grain::after {
+    content: "";
+    position: fixed;
+    inset: 0;
+    pointer-events: none;
+    z-index: 1;
+    opacity: 0.5;
+    background-image: url("data:image/svg+xml,%3Csvg xmlns='http://www.w3.org/2000/svg' width='140' height='140'%3E%3Cfilter id='n'%3E%3CfeTurbulence type='fractalNoise' baseFrequency='0.85' numOctaves='2' stitchTiles='stitch'/%3E%3CfeColorMatrix type='saturate' values='0'/%3E%3C/filter%3E%3Crect width='140' height='140' filter='url(%23n)' opacity='0.05'/%3E%3C/svg%3E");
+    mix-blend-mode: multiply;
+  }
+}
+
+/* ---------- gentle, purposeful motion only ---------- */
+@keyframes floaty {
+  0%, 100% { transform: translateY(0); }
+  50% { transform: translateY(-9px); }
+}
+@keyframes pulseDot {
+  0%, 100% { opacity: 1; transform: scale(1); }
+  50% { opacity: 0.35; transform: scale(0.7); }
+}
+.animate-floaty { animation: floaty 9s var(--ease-out-soft) infinite; }
+.animate-pulse-dot { animation: pulseDot 1.8s ease-in-out infinite; }
+
+/* scrollbar */
+::-webkit-scrollbar { width: 11px; height: 11px; }
+::-webkit-scrollbar-track { background: var(--color-paper-2); }
+::-webkit-scrollbar-thumb {
+  background: var(--color-sand);
+  border-radius: 99px;
+  border: 2px solid var(--color-paper-2);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  *, *::before, *::after {
+    animation-duration: 0.001ms !important;
+    animation-iteration-count: 1 !important;
+    transition-duration: 0.001ms !important;
+    scroll-behavior: auto !important;
+  }
 }

@@ -1,36 +1,108 @@
-This is a [Next.js](https://nextjs.org) project bootstrapped with [`create-next-app`](https://nextjs.org/docs/app/api-reference/cli/create-next-app).
+# 🐠 Happy Aquarium
 
-## Getting Started
+A premium, immersive website + full custom CMS for **Happy Aquarium** — an aquarium & imported-fish store near Eye Hospital, Kuthuparamba, Kerala.
 
-First, run the development server:
+Built **Cloudflare-native**: Next.js runs on Cloudflare Workers via OpenNext, data lives in Cloudflare D1 (serverless SQLite), media in R2. Editorial "nature-documentary" design — warm paper canvas, Fraunces serif, deep pine-teal + terracotta.
+
+---
+
+## ✨ Features
+
+**Storefront**
+- Cinematic editorial hero with GSAP scroll + mouse parallax, Lenis smooth scroll
+- Live fish catalogue (35+ species) with search, category / difficulty filters & sorting
+- Rich fish detail pages — every care attribute (temp, pH, tank size, diet, temperament…), gallery, varieties, related fish, Product JSON-LD
+- Accessories catalogue + detail, blog, gallery with lightbox, contact form
+- Interactive tools: **Fish Compatibility Checker** and **Aquarium Planner** (live recommendations)
+- WhatsApp reserve / call CTAs everywhere, `today's offers` with live countdowns
+- Fully responsive, `prefers-reduced-motion` aware, SEO metadata + JSON-LD
+
+**Admin CMS** (`/admin`)
+- Signed-cookie auth with role hierarchy (admin / manager / staff / viewer)
+- Dashboard: live stats, recent enquiries, low-stock alerts
+- **Fish** — full CRUD (30+ fields)
+- **Enquiries** — inbox with status workflow
+- **Site Settings** — store info, contact, address, map, socials, SEO defaults
+- **Homepage Builder** — add / edit / delete / reorder / toggle sections
+- **Offers** — CRUD with scheduled start/end & placement
+- **Products / Blog / Gallery / Testimonials** — live list views (CRUD forms follow the Fish template)
+
+---
+
+## 🧱 Tech Stack
+
+| Layer | Choice |
+|-------|--------|
+| Framework | Next.js 16 (App Router, RSC, Server Actions) · React 19 · TypeScript strict |
+| Styling | Tailwind CSS v4 (CSS `@theme`) · Fraunces + Inter |
+| Motion | GSAP + ScrollTrigger · Lenis · Framer Motion |
+| Database | Cloudflare D1 (SQLite) via Drizzle ORM |
+| Storage | Cloudflare R2 (media) |
+| Hosting | Cloudflare Workers via `@opennextjs/cloudflare` |
+| Auth | Custom PBKDF2 + HMAC signed-cookie sessions (edge-compatible, Web Crypto) |
+
+---
+
+## 🚀 Local Development
 
 ```bash
-npm run dev
-# or
-yarn dev
-# or
-pnpm dev
-# or
-bun dev
+npm install
+
+# create the local D1 schema and seed all content
+npm run db:migrate:local
+npm run db:seed:local
+
+npm run dev          # http://localhost:3000
 ```
 
-Open [http://localhost:3000](http://localhost:3000) with your browser to see the result.
+**Admin:** http://localhost:3000/admin/login — `admin@happyaquarium.in` / `admin123` (change in production).
 
-You can start editing the page by modifying `app/page.tsx`. The page auto-updates as you edit the file.
+---
 
-This project uses [`next/font`](https://nextjs.org/docs/app/building-your-application/optimizing/fonts) to automatically optimize and load [Geist](https://vercel.com/font), a new font family for Vercel.
+## 📜 Scripts
 
-## Learn More
+| Script | Purpose |
+|--------|---------|
+| `npm run dev` | Next dev server (Turbopack) with local D1/R2 bindings |
+| `npm run build` | Production Next build |
+| `npm run typecheck` | `tsc --noEmit` |
+| `npm run db:generate` | Generate Drizzle SQL migrations from the schema |
+| `npm run db:migrate:local` / `:remote` | Apply migrations to local / remote D1 |
+| `npm run db:seed:local` | Seed all content into local D1 |
+| `npm run preview` | Build with OpenNext + run the Workers preview |
+| `npm run deploy` | Build with OpenNext + deploy to Cloudflare |
 
-To learn more about Next.js, take a look at the following resources:
+---
 
-- [Next.js Documentation](https://nextjs.org/docs) - learn about Next.js features and API.
-- [Learn Next.js](https://nextjs.org/learn) - an interactive Next.js tutorial.
+## ☁️ Deploying to Cloudflare
 
-You can check out [the Next.js GitHub repository](https://github.com/vercel/next.js) - your feedback and contributions are welcome!
+1. `npx wrangler login`
+2. Create the D1 database and copy its `database_id` into `wrangler.jsonc`:
+   ```bash
+   npx wrangler d1 create happy-aquarium-db
+   ```
+3. Create the R2 bucket: `npx wrangler r2 bucket create happy-aquarium-media`
+4. Apply migrations & seed remote: `npm run db:migrate:remote` (then run the seed against remote)
+5. Set secrets: `npx wrangler secret put AUTH_SECRET`
+6. `npm run deploy`
 
-## Deploy on Vercel
+---
 
-The easiest way to deploy your Next.js app is to use the [Vercel Platform](https://vercel.com/new?utm_medium=default-template&filter=next.js&utm_source=create-next-app&utm_campaign=create-next-app-readme) from the creators of Next.js.
+## 📁 Structure
 
-Check out our [Next.js deployment documentation](https://nextjs.org/docs/app/building-your-application/deploying) for more details.
+```
+src/
+  app/
+    (site)/        # public storefront (own chrome layout)
+    admin/         # CMS — login + (dashboard) group
+    api/           # route handlers (leads, health)
+  components/      # ui, layout, cards, home, fish, tools, admin, effects
+  db/              # Drizzle schema + seed data
+  lib/             # queries, admin queries, auth, utils
+drizzle/           # generated migrations
+scripts/seed.ts    # seed runner (getPlatformProxy + Drizzle)
+```
+
+---
+
+*Made with care in Kerala.*

@@ -1,0 +1,20 @@
+{
+  "version": "7",
+  "dialect": "sqlite",
+  "entries": [
+    {
+      "idx": 0,
+      "version": "6",
+      "when": 1783466511833,
+      "tag": "0000_dapper_ultimatum",
+      "breakpoints": true
+    },
+    {
+      "idx": 1,
+      "version": "6",
+      "when": 1783466993303,
+      "tag": "0001_far_gabe_jones",
+      "breakpoints": true
+    }
+  ]
+}
