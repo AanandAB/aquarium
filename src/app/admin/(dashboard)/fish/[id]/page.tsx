@@ -8,18 +8,19 @@ import { saveFish } from "@/app/admin/actions";
 import {
   DIFFICULTY_LEVELS, AGGRESSION_LEVELS, WATER_TYPES, AVAILABILITY,
 } from "@/db/schema";
+import ImageField from "@/components/admin/ImageField";
 
 export const dynamic = "force-dynamic";
 
 const inputCls =
-  "w-full rounded-xl border border-white/15 bg-white/5 px-3 py-2.5 text-sm text-softwhite placeholder:text-slate-500 focus:border-aqua/60 focus:outline-none";
+  "w-full rounded-xl border border-ink/15 bg-[#fffdf8] px-3 py-2.5 text-sm text-ink placeholder:text-ink/40 focus:border-clay/50 focus:outline-none focus:ring-1 focus:ring-clay/30";
 
 function Field({ label, children, hint }: { label: string; children: React.ReactNode; hint?: string }) {
   return (
     <label className="block">
-      <span className="mb-1.5 block text-xs uppercase tracking-wide text-slate-400">{label}</span>
+      <span className="mb-1.5 block text-xs uppercase tracking-wide text-ink/55">{label}</span>
       {children}
-      {hint && <span className="mt-1 block text-[11px] text-slate-500">{hint}</span>}
+      {hint && <span className="mt-1 block text-[11px] text-ink/45">{hint}</span>}
     </label>
   );
 }
@@ -125,7 +126,7 @@ export default async function FishForm({
         <section className="rounded-2xl glass p-5">
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-aqua">Media</h2>
           <div className="grid gap-4">
-            <Field label="Hero image URL"><input name="heroImage" defaultValue={f?.heroImage ?? ""} className={inputCls} /></Field>
+            <ImageField name="heroImage" label="Hero image" defaultValue={f?.heroImage ?? ""} hint="Paste a URL, or upload a photo from your device" />
             <Field label="Gallery URLs" hint="One per line"><textarea name="gallery" rows={3} defaultValue={(f?.gallery ?? []).join("\n")} className={inputCls} /></Field>
             <Field label="Video URL"><input name="video" defaultValue={f?.video ?? ""} className={inputCls} /></Field>
             <Field label="Tags" hint="Comma or newline separated"><input name="tags" defaultValue={(f?.tags ?? []).join(", ")} className={inputCls} /></Field>

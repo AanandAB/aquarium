@@ -17,11 +17,11 @@ export const siteSettings = {
   city: "Kannur",
   state: "Kerala",
   pincode: "670643",
-  mapLat: 11.83064,
-  mapLng: 75.56862,
+  mapLat: 11.829637,
+  mapLng: 75.562644,
   mapEmbedUrl:
-    "https://www.google.com/maps?q=Kuthuparamba,Kerala&output=embed",
-  directionsUrl: "https://www.google.com/maps/dir/?api=1&destination=Kuthuparamba,Kerala",
+    "https://www.google.com/maps?q=11.829637,75.562644&output=embed",
+  directionsUrl: "https://www.google.com/maps/dir/?api=1&destination=11.829637,75.562644",
   openingHours: {
     monday: { open: "09:00", close: "20:00" },
     tuesday: { open: "09:00", close: "20:00" },

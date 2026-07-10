@@ -299,3 +299,264 @@ export async function updateEnquiryStatus(formData: FormData): Promise<void> {
   }
   revalidatePath("/admin/enquiries");
 }
+
+/* ------------------------------ products ------------------------------ */
+
+export async function saveProduct(formData: FormData): Promise<void> {
+  await requireAdmin("staff");
+  const db = getDb();
+  const id = str(formData, "id");
+  const data = {
+    name: str(formData, "name") ?? "Product",
+    slug: str(formData, "slug") ?? (str(formData, "name") ?? "item").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+    description: str(formData, "description"),
+    price: num(formData, "price"),
+    offerPrice: num(formData, "offerPrice"),
+    heroImage: str(formData, "image"),
+    gallery: lines(formData, "gallery"),
+    categoryId: str(formData, "categoryId"),
+    stock: num(formData, "stock") ?? 0,
+    featured: bool(formData, "featured"),
+    trending: bool(formData, "trending"),
+    published: bool(formData, "published"),
+    sortOrder: num(formData, "sortOrder") ?? 0,
+    metaTitle: str(formData, "metaTitle"),
+    metaDescription: str(formData, "metaDescription"),
+    updatedAt: new Date(),
+  };
+  if (id) await db.update(s.products).set(data).where(eq(s.products.id, id));
+  else await db.insert(s.products).values({ id: crypto.randomUUID(), ...data });
+  revalidatePath("/admin/products");
+  redirect("/admin/products");
+}
+
+export async function deleteProduct(formData: FormData): Promise<void> {
+  await requireAdmin("manager");
+  const id = str(formData, "id");
+  if (id) { const db = getDb(); await db.delete(s.products).where(eq(s.products.id, id)); }
+  revalidatePath("/admin/products");
+  redirect("/admin/products");
+}
+
+export async function toggleProductPublished(formData: FormData): Promise<void> {
+  await requireAdmin("staff");
+  const id = str(formData, "id");
+  if (id) {
+    const db = getDb();
+    const [p] = await db.select({ published: s.products.published }).from(s.products).where(eq(s.products.id, id)).limit(1);
+    if (p) await db.update(s.products).set({ published: !p.published, updatedAt: new Date() }).where(eq(s.products.id, id));
+  }
+  revalidatePath("/admin/products");
+}
+
+/* ------------------------------ blog ------------------------------ */
+
+export async function savePost(formData: FormData): Promise<void> {
+  await requireAdmin("staff");
+  const db = getDb();
+  const id = str(formData, "id");
+  const isPublished = bool(formData, "published");
+
+  // Preserve an existing publishedAt so re-saving a live post doesn't reshuffle
+  // the public ordering; stamp a fresh one when a draft goes live.
+  let publishedAt: Date | null = isPublished ? new Date() : null;
+  if (id) {
+    const [ex] = await db
+      .select({ publishedAt: s.blogPosts.publishedAt })
+      .from(s.blogPosts)
+      .where(eq(s.blogPosts.id, id))
+      .limit(1);
+    publishedAt = isPublished ? (ex?.publishedAt ?? new Date()) : null;
+  }
+
+  const data = {
+    title: str(formData, "title") ?? "Post",
+    slug:
+      str(formData, "slug") ??
+      (str(formData, "title") ?? "post")
+        .toLowerCase()
+        .replace(/[^a-z0-9]+/g, "-")
+        .replace(/^-|-$/g, ""),
+    excerpt: str(formData, "excerpt"),
+    content: str(formData, "content"),
+    coverImage: str(formData, "image"),
+    author: str(formData, "author"),
+    categoryId: str(formData, "categoryId"),
+    tags: lines(formData, "tags"),
+    featured: bool(formData, "featured"),
+    status: (isPublished ? "published" : "draft") as never,
+    publishedAt,
+    metaTitle: str(formData, "metaTitle"),
+    metaDescription: str(formData, "metaDescription"),
+    updatedAt: new Date(),
+  };
+  if (id) await db.update(s.blogPosts).set(data).where(eq(s.blogPosts.id, id));
+  else await db.insert(s.blogPosts).values({ id: crypto.randomUUID(), ...data, createdAt: new Date() });
+  revalidatePath("/admin/blog");
+  revalidatePath("/blog");
+  redirect("/admin/blog");
+}
+
+export async function deletePost(formData: FormData): Promise<void> {
+  await requireAdmin("manager");
+  const id = str(formData, "id");
+  if (id) { const db = getDb(); await db.delete(s.blogPosts).where(eq(s.blogPosts.id, id)); }
+  revalidatePath("/admin/blog");
+  redirect("/admin/blog");
+}
+
+export async function togglePostPublished(formData: FormData): Promise<void> {
+  await requireAdmin("staff");
+  const id = str(formData, "id");
+  if (id) {
+    const db = getDb();
+    const [p] = await db.select({ status: s.blogPosts.status }).from(s.blogPosts).where(eq(s.blogPosts.id, id)).limit(1);
+    if (p) {
+      const next: "published" | "draft" = p.status === "published" ? "draft" : "published";
+      await db.update(s.blogPosts).set({ status: next, updatedAt: new Date() }).where(eq(s.blogPosts.id, id));
+    }
+  }
+  revalidatePath("/admin/blog");
+}
+
+/* ------------------------------ gallery ------------------------------ */
+
+export async function saveGalleryItem(formData: FormData): Promise<void> {
+  await requireAdmin("staff");
+  const db = getDb();
+  const id = str(formData, "id");
+  const imageUrl = str(formData, "image");
+  if (!imageUrl && !id) throw new Error("Image URL is required.");
+  const data = {
+    title: str(formData, "title"),
+    caption: str(formData, "description"),
+    url: imageUrl ?? "",
+    kind: (str(formData, "category") ?? "showcase") as (typeof s.GALLERY_KINDS)[number],
+    featured: bool(formData, "featured"),
+    published: bool(formData, "published"),
+    sortOrder: num(formData, "sortOrder") ?? 0,
+    updatedAt: new Date(),
+  };
+  if (id) await db.update(s.galleryItems).set(data).where(eq(s.galleryItems.id, id));
+  else await db.insert(s.galleryItems).values({ id: crypto.randomUUID(), ...data });
+  revalidatePath("/admin/gallery");
+  redirect("/admin/gallery");
+}
+
+export async function deleteGalleryItem(formData: FormData): Promise<void> {
+  await requireAdmin("manager");
+  const id = str(formData, "id");
+  if (id) { const db = getDb(); await db.delete(s.galleryItems).where(eq(s.galleryItems.id, id)); }
+  revalidatePath("/admin/gallery");
+  redirect("/admin/gallery");
+}
+
+export async function toggleGalleryPublished(formData: FormData): Promise<void> {
+  await requireAdmin("staff");
+  const id = str(formData, "id");
+  if (id) {
+    const db = getDb();
+    const [r] = await db.select({ published: s.galleryItems.published }).from(s.galleryItems).where(eq(s.galleryItems.id, id)).limit(1);
+    if (r) await db.update(s.galleryItems).set({ published: !r.published, updatedAt: new Date() }).where(eq(s.galleryItems.id, id));
+  }
+  revalidatePath("/admin/gallery");
+}
+
+/* ------------------------------ testimonials ------------------------------ */
+
+export async function saveTestimonial(formData: FormData): Promise<void> {
+  await requireAdmin("staff");
+  const db = getDb();
+  const id = str(formData, "id");
+  const data = {
+    customerName: str(formData, "name") ?? "Customer",
+    location: str(formData, "role"),
+    review: str(formData, "content") ?? "",
+    rating: num(formData, "rating") ?? 5,
+    avatar: str(formData, "avatar"),
+    featured: bool(formData, "featured"),
+    published: bool(formData, "published"),
+    sortOrder: num(formData, "sortOrder") ?? 0,
+    updatedAt: new Date(),
+  };
+  if (id) await db.update(s.testimonials).set(data).where(eq(s.testimonials.id, id));
+  else await db.insert(s.testimonials).values({ id: crypto.randomUUID(), ...data });
+  revalidatePath("/admin/testimonials");
+  redirect("/admin/testimonials");
+}
+
+export async function deleteTestimonial(formData: FormData): Promise<void> {
+  await requireAdmin("manager");
+  const id = str(formData, "id");
+  if (id) { const db = getDb(); await db.delete(s.testimonials).where(eq(s.testimonials.id, id)); }
+  revalidatePath("/admin/testimonials");
+  redirect("/admin/testimonials");
+}
+
+export async function toggleTestimonialPublished(formData: FormData): Promise<void> {
+  await requireAdmin("staff");
+  const id = str(formData, "id");
+  if (id) {
+    const db = getDb();
+    const [r] = await db.select({ published: s.testimonials.published }).from(s.testimonials).where(eq(s.testimonials.id, id)).limit(1);
+    if (r) await db.update(s.testimonials).set({ published: !r.published, updatedAt: new Date() }).where(eq(s.testimonials.id, id));
+  }
+  revalidatePath("/admin/testimonials");
+}
+
+/* ------------------------------ categories ------------------------------ */
+
+export async function saveCategory(formData: FormData): Promise<void> {
+  await requireAdmin("manager");
+  const db = getDb();
+  const id = str(formData, "id");
+  const data = {
+    name: str(formData, "name") ?? "Category",
+    slug: str(formData, "slug") ?? (str(formData, "name") ?? "cat").toLowerCase().replace(/[^a-z0-9]+/g, "-").replace(/^-|-$/g, ""),
+    kind: (str(formData, "kind") ?? "fish") as never,
+    icon: str(formData, "icon"),
+    description: str(formData, "description"),
+    image: str(formData, "image"),
+    published: bool(formData, "published"),
+    sortOrder: num(formData, "sortOrder") ?? 0,
+  };
+  if (id) await db.update(s.categories).set(data).where(eq(s.categories.id, id));
+  else await db.insert(s.categories).values({ id: crypto.randomUUID(), ...data });
+  revalidatePath("/admin/categories");
+  redirect("/admin/categories");
+}
+
+export async function deleteCategory(formData: FormData): Promise<void> {
+  await requireAdmin("manager");
+  const id = str(formData, "id");
+  if (id) { const db = getDb(); await db.delete(s.categories).where(eq(s.categories.id, id)); }
+  revalidatePath("/admin/categories");
+  redirect("/admin/categories");
+}
+
+/* ------------------------------ faqs ------------------------------ */
+
+export async function saveFaq(formData: FormData): Promise<void> {
+  await requireAdmin("staff");
+  const db = getDb();
+  const id = str(formData, "id");
+  const data = {
+    question: str(formData, "question") ?? "Question?",
+    answer: str(formData, "answer") ?? "",
+    category: str(formData, "category") ?? "general",
+    published: bool(formData, "published"),
+    sortOrder: num(formData, "sortOrder") ?? 0,
+  };
+  if (id) await db.update(s.faqs).set(data).where(eq(s.faqs.id, id));
+  else await db.insert(s.faqs).values({ id: crypto.randomUUID(), ...data });
+  revalidatePath("/admin/faqs");
+  redirect("/admin/faqs");
+}
+
+export async function deleteFaq(formData: FormData): Promise<void> {
+  await requireAdmin("manager");
+  const id = str(formData, "id");
+  if (id) { const db = getDb(); await db.delete(s.faqs).where(eq(s.faqs.id, id)); }
+  revalidatePath("/admin/faqs");
+  redirect("/admin/faqs");
+}

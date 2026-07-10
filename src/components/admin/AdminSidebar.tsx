@@ -20,6 +20,8 @@ const LINKS = [
   { href: "/admin/blog", label: "Blog", icon: FileText },
   { href: "/admin/gallery", label: "Gallery", icon: Images },
   { href: "/admin/testimonials", label: "Testimonials", icon: Star },
+  { href: "/admin/categories", label: "Categories", icon: LayoutDashboard },
+  { href: "/admin/faqs", label: "FAQs", icon: LayoutDashboard },
 ];
 
 export default function AdminSidebar({

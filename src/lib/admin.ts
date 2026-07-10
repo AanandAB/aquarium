@@ -119,9 +119,34 @@ export async function getFishCategoriesAdmin() {
     .orderBy(s.categories.sortOrder);
 }
 
+export async function getProductCategoriesAdmin() {
+  const db = getDb();
+  return db
+    .select({ id: s.categories.id, name: s.categories.name, slug: s.categories.slug })
+    .from(s.categories)
+    .where(eq(s.categories.kind, "product"))
+    .orderBy(s.categories.sortOrder);
+}
+
 export async function listBlogAdmin() {
   const db = getDb();
-  return db.select().from(s.blogPosts).orderBy(desc(s.blogPosts.updatedAt));
+  return db
+    .select({
+      ...getTableColumns(s.blogPosts),
+      categoryName: s.categories.name,
+    })
+    .from(s.blogPosts)
+    .leftJoin(s.categories, eq(s.blogPosts.categoryId, s.categories.id))
+    .orderBy(desc(s.blogPosts.updatedAt));
+}
+
+export async function getBlogCategoriesAdmin() {
+  const db = getDb();
+  return db
+    .select({ id: s.categories.id, name: s.categories.name, slug: s.categories.slug })
+    .from(s.categories)
+    .where(eq(s.categories.kind, "blog"))
+    .orderBy(s.categories.sortOrder);
 }
 
 export async function listTestimonialsAdmin() {
@@ -158,5 +183,78 @@ export async function listOffersAdmin() {
 export async function getOfferById(id: string) {
   const db = getDb();
   const [row] = await db.select().from(s.offers).where(eq(s.offers.id, id)).limit(1);
+  return row ?? null;
+}
+
+export async function getProductByIdAdmin(id: string) {
+  const db = getDb();
+  const [row] = await db.select().from(s.products).where(eq(s.products.id, id)).limit(1);
+  return row ?? null;
+}
+
+export async function getPostByIdAdmin(id: string) {
+  const db = getDb();
+  const [row] = await db.select().from(s.blogPosts).where(eq(s.blogPosts.id, id)).limit(1);
+  return row ?? null;
+}
+
+export async function listGalleryAdmin() {
+  const db = getDb();
+  return db.select().from(s.galleryItems).orderBy(s.galleryItems.sortOrder);
+}
+
+export async function getGalleryItemByIdAdmin(id: string) {
+  const db = getDb();
+  const [row] = await db.select().from(s.galleryItems).where(eq(s.galleryItems.id, id)).limit(1);
+  return row ?? null;
+}
+
+export async function getTestimonialByIdAdmin(id: string) {
+  const db = getDb();
+  const [row] = await db.select().from(s.testimonials).where(eq(s.testimonials.id, id)).limit(1);
+  return row ?? null;
+}
+
+export async function listCategoriesAdmin() {
+  const db = getDb();
+  const cats = await db
+    .select()
+    .from(s.categories)
+    .orderBy(s.categories.sortOrder);
+  const [fishCounts, productCounts, blogCounts] = await Promise.all([
+    db
+      .select({ id: s.fish.categoryId, c: count() })
+      .from(s.fish)
+      .groupBy(s.fish.categoryId),
+    db
+      .select({ id: s.products.categoryId, c: count() })
+      .from(s.products)
+      .groupBy(s.products.categoryId),
+    db
+      .select({ id: s.blogPosts.categoryId, c: count() })
+      .from(s.blogPosts)
+      .groupBy(s.blogPosts.categoryId),
+  ]);
+  const counts = new Map<string, number>();
+  for (const r of [...fishCounts, ...productCounts, ...blogCounts]) {
+    if (r.id) counts.set(r.id, (counts.get(r.id) ?? 0) + Number(r.c));
+  }
+  return cats.map((c) => ({ ...c, itemCount: counts.get(c.id) ?? 0 }));
+}
+
+export async function getCategoryByIdAdmin(id: string) {
+  const db = getDb();
+  const [row] = await db.select().from(s.categories).where(eq(s.categories.id, id)).limit(1);
+  return row ?? null;
+}
+
+export async function listFaqsAdmin() {
+  const db = getDb();
+  return db.select().from(s.faqs).orderBy(s.faqs.sortOrder);
+}
+
+export async function getFaqByIdAdmin(id: string) {
+  const db = getDb();
+  const [row] = await db.select().from(s.faqs).where(eq(s.faqs.id, id)).limit(1);
   return row ?? null;
 }
