@@ -560,3 +560,78 @@ export async function deleteFaq(formData: FormData): Promise<void> {
   revalidatePath("/admin/faqs");
   redirect("/admin/faqs");
 }
+
+/* ------------------------------ planner: tank pricing ------------------------------ */
+
+export async function saveTankPricing(formData: FormData): Promise<void> {
+  await requireAdmin("staff");
+  const db = getDb();
+  const id = str(formData, "id");
+  const data = {
+    name: str(formData, "name") ?? "Tier",
+    litresMin: num(formData, "litresMin") ?? 0,
+    litresMax: num(formData, "litresMax") ?? null,
+    baseSetup: num(formData, "baseSetup") ?? 0,
+    perLitre: num(formData, "perLitre") ?? 0,
+    filterCost: num(formData, "filterCost") ?? 0,
+    heaterCost: num(formData, "heaterCost") ?? 0,
+    lightCost: num(formData, "lightCost") ?? 0,
+    substrateCost: num(formData, "substrateCost") ?? 0,
+    decorCost: num(formData, "decorCost") ?? 0,
+    note: str(formData, "note"),
+    sortOrder: num(formData, "sortOrder") ?? 0,
+    published: bool(formData, "published"),
+    updatedAt: new Date(),
+  };
+  if (id) await db.update(s.tankPricing).set(data).where(eq(s.tankPricing.id, id));
+  else await db.insert(s.tankPricing).values({ id: crypto.randomUUID(), ...data });
+  revalidatePath("/admin/planner");
+  revalidatePath("/planner");
+  redirect("/admin/planner");
+}
+
+export async function deleteTankPricing(formData: FormData): Promise<void> {
+  await requireAdmin("manager");
+  const id = str(formData, "id");
+  if (id) { const db = getDb(); await db.delete(s.tankPricing).where(eq(s.tankPricing.id, id)); }
+  revalidatePath("/admin/planner");
+  revalidatePath("/planner");
+  redirect("/admin/planner");
+}
+
+/* ------------------------------ planner: curated presets ------------------------------ */
+
+export async function savePlannerPreset(formData: FormData): Promise<void> {
+  await requireAdmin("staff");
+  const db = getDb();
+  const id = str(formData, "id");
+  const fishIds = formData.getAll("fishIds").map((v) => String(v)).filter(Boolean);
+  const data = {
+    name: str(formData, "name") ?? "Setup",
+    description: str(formData, "description"),
+    image: str(formData, "image"),
+    tankSizeMin: num(formData, "tankSizeMin") ?? null,
+    tankSizeMax: num(formData, "tankSizeMax") ?? null,
+    budgetMin: num(formData, "budgetMin") ?? null,
+    budgetMax: num(formData, "budgetMax") ?? null,
+    experience: (str(formData, "experience") ?? "beginner") as never,
+    fishIds: fishIds.length ? (fishIds as never) : null,
+    sortOrder: num(formData, "sortOrder") ?? 0,
+    published: bool(formData, "published"),
+    updatedAt: new Date(),
+  };
+  if (id) await db.update(s.plannerPresets).set(data).where(eq(s.plannerPresets.id, id));
+  else await db.insert(s.plannerPresets).values({ id: crypto.randomUUID(), ...data });
+  revalidatePath("/admin/planner");
+  revalidatePath("/planner");
+  redirect("/admin/planner");
+}
+
+export async function deletePlannerPreset(formData: FormData): Promise<void> {
+  await requireAdmin("manager");
+  const id = str(formData, "id");
+  if (id) { const db = getDb(); await db.delete(s.plannerPresets).where(eq(s.plannerPresets.id, id)); }
+  revalidatePath("/admin/planner");
+  revalidatePath("/planner");
+  redirect("/admin/planner");
+}

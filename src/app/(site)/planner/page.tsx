@@ -2,7 +2,7 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/layout/PageHero";
 import { Container } from "@/components/ui/primitives";
 import PlannerTool from "@/components/tools/PlannerTool";
-import { getPlannerPresets, getAllFishLite } from "@/lib/queries";
+import { getPlannerPresets, getAllFishLite, getTankPricing } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -13,9 +13,10 @@ export const metadata: Metadata = {
 };
 
 export default async function PlannerPage() {
-  const [presets, fish] = await Promise.all([
+  const [presets, fish, tankPricing] = await Promise.all([
     getPlannerPresets(),
     getAllFishLite(),
+    getTankPricing(),
   ]);
 
   return (
@@ -23,11 +24,11 @@ export default async function PlannerPage() {
       <PageHero
         eyebrow="Tool"
         title="Aquarium Planner"
-        subtitle="Tell us your tank size, budget and experience — we’ll suggest a thriving community."
+        subtitle="Enter your tank's length, breadth &amp; height — we'll estimate equipment cost and suggest a thriving community that fits your budget."
         breadcrumb={[{ label: "Home", href: "/" }, { label: "Planner" }]}
       />
       <Container className="pb-20">
-        <PlannerTool presets={presets} fish={fish} />
+        <PlannerTool presets={presets} fish={fish} tankPricing={tankPricing} />
       </Container>
     </>
   );

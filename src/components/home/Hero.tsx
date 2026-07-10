@@ -134,7 +134,7 @@ export default function Hero({
           <div className="relative overflow-hidden rounded-[1.5rem] border border-ink/10 bg-[#fffdf8] p-2 shadow-[0_40px_80px_-50px_rgba(34,29,22,0.5)]">
             <div ref={plate} className="relative aspect-[4/5] overflow-hidden rounded-[1rem]">
               <Image
-                src="https://loremflickr.com/1000/1250/aquarium,fish,underwater/all?lock=900"
+                src="https://upload.wikimedia.org/wikipedia/commons/a/a8/Amaterske_akvarium.jpg"
                 alt="A display aquarium at Happy Aquarium"
                 fill
                 priority

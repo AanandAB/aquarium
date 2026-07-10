@@ -1,11 +1,10 @@
 /**
- * Themed placeholder imagery via LoremFlickr (real, keyword-matched photos).
- * These are stand-ins so the site looks alive on first run — every image is
- * replaceable from the admin Media Library. `lock` keeps a given card stable.
+ * Reliable stable placeholder imagery. Uses picsum.photos (stable per `lock`
+ * seed, always 200) instead of loremflickr, whose ?lock= endpoint returns 500.
+ * These are stand-ins; replace any image from the admin (URL or upload).
  */
 export function img(keywords: string, lock: number, w = 900, h = 700): string {
-  const kw = encodeURIComponent(keywords);
-  return `https://loremflickr.com/${w}/${h}/${kw}/all?lock=${lock}`;
+  return `https://picsum.photos/seed/aqua${lock}/${w}/${h}`;
 }
 
 export function gallery(keywords: string, base: number, count = 3): string[] {

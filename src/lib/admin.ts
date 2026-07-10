@@ -258,3 +258,44 @@ export async function getFaqByIdAdmin(id: string) {
   const [row] = await db.select().from(s.faqs).where(eq(s.faqs.id, id)).limit(1);
   return row ?? null;
 }
+
+/* ------------------------------ planner ------------------------------ */
+
+export async function listTankPricingAdmin() {
+  const db = getDb();
+  return db.select().from(s.tankPricing).orderBy(s.tankPricing.sortOrder);
+}
+
+export async function getTankPricingByIdAdmin(id: string) {
+  const db = getDb();
+  const [row] = await db
+    .select()
+    .from(s.tankPricing)
+    .where(eq(s.tankPricing.id, id))
+    .limit(1);
+  return row ?? null;
+}
+
+export async function listPlannerPresetsAdmin() {
+  const db = getDb();
+  return db.select().from(s.plannerPresets).orderBy(s.plannerPresets.sortOrder);
+}
+
+export async function getPlannerPresetByIdAdmin(id: string) {
+  const db = getDb();
+  const [row] = await db
+    .select()
+    .from(s.plannerPresets)
+    .where(eq(s.plannerPresets.id, id))
+    .limit(1);
+  return row ?? null;
+}
+
+/** id + name list of published fish, for preset multi-select. */
+export async function getFishForSelectAdmin() {
+  const db = getDb();
+  return db
+    .select({ id: s.fish.id, name: s.fish.name })
+    .from(s.fish)
+    .orderBy(s.fish.name);
+}

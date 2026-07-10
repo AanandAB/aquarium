@@ -334,3 +334,12 @@ export async function getPlannerPresets() {
 export async function getCompatibilityPairs() {
   return getDb().select().from(s.fishCompatibility);
 }
+
+/** Published tank equipment-pricing tiers for the planner estimate. */
+export async function getTankPricing() {
+  return getDb()
+    .select()
+    .from(s.tankPricing)
+    .where(eq(s.tankPricing.published, true))
+    .orderBy(asc(s.tankPricing.sortOrder));
+}

@@ -4,7 +4,7 @@ import Link from "next/link";
 import { usePathname } from "next/navigation";
 import {
   LayoutDashboard, Fish, Package, Inbox, Images, Star,
-  FileText, LogOut, ExternalLink,
+  FileText, LogOut, ExternalLink, SlidersHorizontal,
 } from "lucide-react";
 import { logoutAction } from "@/app/admin/actions";
 import { cn } from "@/lib/utils";
@@ -21,6 +21,7 @@ const LINKS = [
   { href: "/admin/gallery", label: "Gallery", icon: Images },
   { href: "/admin/testimonials", label: "Testimonials", icon: Star },
   { href: "/admin/categories", label: "Categories", icon: LayoutDashboard },
+  { href: "/admin/planner", label: "Planner", icon: SlidersHorizontal },
   { href: "/admin/faqs", label: "FAQs", icon: LayoutDashboard },
 ];
 

@@ -591,6 +591,28 @@ export const plannerPresets = sqliteTable("planner_presets", {
 });
 
 /* -------------------------------------------------------------------------- */
+/*  tankPricing — equipment cost tiers by tank volume (planner estimate)      */
+/* -------------------------------------------------------------------------- */
+
+export const tankPricing = sqliteTable("tank_pricing", {
+  id: pk(),
+  name: text("name").notNull(), // e.g. "Nano", "Standard 2ft", "Large 4ft"
+  litresMin: integer("litres_min").notNull().default(0),
+  litresMax: integer("litres_max"), // null = no upper bound (largest tier)
+  baseSetup: real("base_setup").notNull().default(0), // flat tank/setup fee
+  perLitre: real("per_litre").notNull().default(0), // ₹ per litre (water, misc)
+  filterCost: real("filter_cost").notNull().default(0),
+  heaterCost: real("heater_cost").notNull().default(0),
+  lightCost: real("light_cost").notNull().default(0),
+  substrateCost: real("substrate_cost").notNull().default(0),
+  decorCost: real("decor_cost").notNull().default(0),
+  note: text("note"),
+  sortOrder: integer("sort_order").notNull().default(0),
+  published: integer("published", { mode: "boolean" }).notNull().default(true),
+  ...timestamps,
+});
+
+/* -------------------------------------------------------------------------- */
 /*  users & activity logs — auth + roles + audit trail                        */
 /* -------------------------------------------------------------------------- */
 
@@ -706,6 +728,7 @@ export type Enquiry = typeof enquiries.$inferSelect;
 export type NewEnquiry = typeof enquiries.$inferInsert;
 export type FishCompatibility = typeof fishCompatibility.$inferSelect;
 export type PlannerPreset = typeof plannerPresets.$inferSelect;
+export type TankPricing = typeof tankPricing.$inferSelect;
 export type User = typeof users.$inferSelect;
 export type NewUser = typeof users.$inferInsert;
 export type ActivityLog = typeof activityLogs.$inferSelect;
