@@ -81,6 +81,12 @@ export default async function SiteSettingsPage() {
           </div>
         </section>
 
+        <section className="rounded-2xl border border-ink/10 bg-[#fffdf8] p-5">
+          <h2 className="mb-4 text-[11px] font-semibold uppercase tracking-[0.16em] text-clay">Instagram feed</h2>
+          <F label="LightWidget token"><input name="instagramWidgetToken" defaultValue={s?.instagramWidgetToken ?? ""} className={inputCls} placeholder="Get a free token at lightwidget.com" /></F>
+          <p className="mt-2 text-[11px] text-ink/45">Sign up at lightwidget.com (free), connect your Instagram, paste the token here. Posts appear automatically, no rebuild needed.</p>
+        </section>
+
         <div className="flex justify-end gap-3 border-t border-ink/10 pt-5">
           <Link href="/admin" className="rounded-full border border-ink/20 px-6 py-3 text-sm text-ink/70 hover:bg-ink/[0.04]">Cancel</Link>
           <button type="submit" className="rounded-full bg-clay px-8 py-3 text-sm font-semibold text-paper hover:bg-clay-2">Save settings</button>

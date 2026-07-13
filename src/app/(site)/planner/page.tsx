@@ -1,8 +1,9 @@
-import type { Metadata } from "next";
 import { PageHero } from "@/components/layout/PageHero";
 import { Container } from "@/components/ui/primitives";
 import PlannerTool from "@/components/tools/PlannerTool";
+import CustomQuoteForm from "@/components/tools/CustomQuoteForm";
 import { getPlannerPresets, getAllFishLite, getTankPricing } from "@/lib/queries";
+import type { Metadata } from "next";
 
 export const dynamic = "force-dynamic";
 
@@ -29,6 +30,7 @@ export default async function PlannerPage() {
       />
       <Container className="pb-20">
         <PlannerTool presets={presets} fish={fish} tankPricing={tankPricing} />
+        <CustomQuoteForm />
       </Container>
     </>
   );

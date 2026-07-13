@@ -45,6 +45,7 @@ export const siteSettings = {
     "Aquarium fish, imported species, tanks, plants, food and accessories. Visit Happy Aquarium near Eye Hospital, Kuthuparamba, Kerala. Call 9947770808.",
   keywords:
     "aquarium fish Kerala, aquarium shop Kuthuparamba, imported fish, fish tank, koi, oscar, flowerhorn, betta",
+  instagramWidgetToken: null as string | null,
 };
 
 /* Modular homepage — ordered, each fully editable from admin. */

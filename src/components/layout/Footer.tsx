@@ -93,7 +93,7 @@ export default function Footer(p: FooterProps) {
       <div className="border-t border-paper/15">
         <div className="mx-auto flex w-full max-w-7xl flex-col items-center justify-between gap-2 px-5 py-5 text-xs text-paper/50 sm:flex-row sm:px-8">
           <span>© {new Date().getFullYear()} {p.storeName}. All rights reserved.</span>
-          <span>Made with care in Kerala · <Link href="/admin" className="hover:text-paper">Admin</Link></span>
+          <span>Made with care in Kerala · <Link href="/terms" className="hover:text-paper">Terms</Link> · <Link href="/privacy" className="hover:text-paper">Privacy</Link> · <Link href="/returns" className="hover:text-paper">Returns</Link> · <Link href="/admin" className="hover:text-paper">Admin</Link></span>
         </div>
       </div>
     </footer>

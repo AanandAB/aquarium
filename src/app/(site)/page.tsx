@@ -11,6 +11,8 @@ import OffersStrip from "@/components/home/OffersStrip";
 import Testimonials from "@/components/home/Testimonials";
 import FaqAccordion from "@/components/home/FaqAccordion";
 import Newsletter from "@/components/home/Newsletter";
+import InstagramFeed from "@/components/home/InstagramFeed";
+import { Container } from "@/components/ui/primitives";
 import { SITE } from "@/lib/site";
 import {
   getSiteSettings,
@@ -173,6 +175,15 @@ export default async function HomePage() {
           subtitle={subFor("articles")}
           posts={posts}
         />
+      )}
+
+      {settings?.instagramWidgetToken && (
+        <section className="py-16 sm:py-20">
+          <Container>
+            <p className="mb-10 text-center font-sans text-xs font-semibold uppercase tracking-[0.2em] text-clay">From our Instagram</p>
+            <InstagramFeed token={settings.instagramWidgetToken} />
+          </Container>
+        </section>
       )}
 
       {visible("map") && (

@@ -194,6 +194,7 @@ export async function updateSiteSettings(formData: FormData): Promise<void> {
       metaTitle: str(formData, "metaTitle"),
       metaDescription: str(formData, "metaDescription"),
       keywords: str(formData, "keywords"),
+      instagramWidgetToken: str(formData, "instagramWidgetToken"),
       updatedAt: new Date(),
     })
     .where(eq(s.siteSettings.id, "default"));

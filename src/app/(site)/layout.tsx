@@ -3,6 +3,7 @@ import OceanBackground from "@/components/effects/OceanBackground";
 import Header from "@/components/layout/Header";
 import Footer from "@/components/layout/Footer";
 import FloatingActions from "@/components/layout/FloatingActions";
+import CookieBanner from "@/components/layout/CookieBanner";
 import { getSiteSettings, getNav } from "@/lib/queries";
 import { SITE } from "@/lib/site";
 
@@ -68,6 +69,7 @@ export default async function SiteLayout({
         />
       </LenisProvider>
       <FloatingActions phone={phone} whatsapp={whatsapp} />
+      <CookieBanner />
     </>
   );
 }

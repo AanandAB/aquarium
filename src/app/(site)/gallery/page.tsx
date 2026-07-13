@@ -2,7 +2,8 @@ import type { Metadata } from "next";
 import { PageHero } from "@/components/layout/PageHero";
 import { Container } from "@/components/ui/primitives";
 import { GalleryLightbox } from "@/components/gallery/GalleryLightbox";
-import { getGallery } from "@/lib/queries";
+import InstagramFeed from "@/components/home/InstagramFeed";
+import { getGallery, getSiteSettings } from "@/lib/queries";
 
 export const dynamic = "force-dynamic";
 
@@ -13,7 +14,7 @@ export const metadata: Metadata = {
 };
 
 export default async function GalleryPage() {
-  const items = await getGallery();
+  const [items, settings] = await Promise.all([getGallery(), getSiteSettings()]);
 
   return (
     <>
@@ -25,6 +26,13 @@ export default async function GalleryPage() {
       />
 
       <Container className="pb-20">
+        {settings?.instagramWidgetToken && (
+          <section className="mb-16">
+            <p className="mb-8 text-center font-sans text-xs font-semibold uppercase tracking-[0.2em] text-clay">From our Instagram</p>
+            <InstagramFeed token={settings.instagramWidgetToken} />
+          </section>
+        )}
+
         {items.length === 0 ? (
           <div className="rounded-3xl glass p-12 text-center text-ink/75">
             Our gallery is being set up — check back soon.

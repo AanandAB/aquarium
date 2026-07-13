@@ -175,6 +175,7 @@ export const siteSettings = sqliteTable("site_settings", {
   gaId: text("ga_id"),
   metaPixel: text("meta_pixel"),
   theme: text("theme", { mode: "json" }).$type<ThemeConfig>(),
+  instagramWidgetToken: text("instagram_widget_token"),
   ...seoColumns,
   ...timestamps,
 });
