@@ -105,6 +105,7 @@ export const ENQUIRY_STATUS = [
 export const USER_ROLES = ["admin", "manager", "staff", "viewer"] as const;
 export const COMPAT_LEVELS = ["compatible", "semi", "incompatible"] as const;
 export const EXPERIENCE_LEVELS = ["beginner", "intermediate", "expert"] as const;
+export const RATE_TYPES = ["single", "pair"] as const;
 
 /* -------------------------------------------------------------------------- */
 /*  JSON payload types                                                        */
@@ -245,6 +246,7 @@ export const fish = sqliteTable(
     price: real("price"),
     offerPrice: real("offer_price"),
     currency: text("currency").notNull().default("INR"),
+    rateType: text("rate_type", { enum: RATE_TYPES }).notNull().default("pair"),
     stock: integer("stock").notNull().default(0),
     availability: text("availability", { enum: AVAILABILITY }).default(
       "available",

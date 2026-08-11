@@ -24,6 +24,7 @@ export type FishSeed = {
   offer?: number;
   stock?: number;
   avail?: "available" | "low_stock" | "out_of_stock" | "reserved";
+  rate?: "single" | "pair";
   varieties?: Variety[];
   feat?: boolean;
   trend?: boolean;

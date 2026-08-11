@@ -97,6 +97,7 @@ async function main() {
       compatibility: f.compat,
       price: f.price,
       offerPrice: f.offer,
+      rateType: f.rate ?? (["betta-fighter","alligator-gar","batik-snail","apple-snail","white-wizard-snail","striped-pumpkin-snail","flowerhorn-thailand","giant-gourami-white","black-ghost-fish","red-tail-catfish","jaguar-fish","tricolour-cichlid","evjd-fish","thailand-import-oscar"].includes(f.slug) ? "single" : "pair"),
       stock,
       availability: f.avail ?? (stock === 0 ? "out_of_stock" : "available"),
       varieties: f.varieties,
