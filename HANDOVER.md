@@ -91,12 +91,14 @@ Go to **Cloudflare Dashboard → Workers & Pages → Create → Workers Builds**
 
 1. Connect your GitHub account
 2. Select the `aquarium` repository
-3. Leave build settings as default:
+3. Leave build settings:
 
    | Setting | Value |
    |---------|-------|
    | Build command | `npm run build` |
-   | Deploy command | `npx wrangler deploy` |
+   | Deploy command | `npm run deploy` |
+
+   > **Important:** Use `npm run deploy` (not `npx wrangler deploy`) as the deploy command. This runs the full OpenNext build + Cloudflare deploy in one step.
 
 4. Add environment variable:
 
