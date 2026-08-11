@@ -15,6 +15,7 @@ import { allCategories } from "../src/db/seed/data-categories";
 import { fishA } from "../src/db/seed/data-fish-a";
 import { fishB } from "../src/db/seed/data-fish-b";
 import { fishC } from "../src/db/seed/data-fish-c";
+import { fishD } from "../src/db/seed/data-fish-d";
 import type { FishSeed } from "../src/db/seed/fish-helpers";
 import { products as productSeeds } from "../src/db/seed/data-products";
 import { blogPosts as blogSeeds } from "../src/db/seed/data-blog";
@@ -66,7 +67,7 @@ async function main() {
   console.log(`Inserted ${catRows.length} categories`);
 
   /* ---- Fish ---- */
-  const allFish: FishSeed[] = [...fishA, ...fishB, ...fishC];
+  const allFish: FishSeed[] = [...fishA, ...fishB, ...fishC, ...fishD];
   const fishId: Record<string, string> = {};
   for (const f of allFish) {
     const id = uid();

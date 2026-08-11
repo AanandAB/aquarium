@@ -10,10 +10,7 @@ import { SITE } from "@/lib/site";
 const FALLBACK_NAV = [
   { label: "Fish", url: "/fish" },
   { label: "Accessories", url: "/accessories" },
-  { label: "Planner", url: "/planner" },
-  { label: "Compatibility", url: "/compatibility" },
   { label: "Gallery", url: "/gallery" },
-  { label: "Blog", url: "/blog" },
   { label: "Contact", url: "/contact" },
 ];
 

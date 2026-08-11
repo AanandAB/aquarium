@@ -11,6 +11,7 @@ export const fishCategories: NewCategory[] = [
   { kind: "fish", slug: "bettas-gouramis", name: "Bettas & Gouramis", sortOrder: 6, featured: true, icon: "🎏", color: "#e879f9", image: img("betta,fish", 106), description: "Labyrinth fish with dramatic fins and personality — centrepieces for nano and community tanks." },
   { kind: "fish", slug: "sharks-suckers", name: "Sharks & Suckers", sortOrder: 7, icon: "🦈", color: "#60a5fa", image: img("rainbow,shark,fish", 107), description: "Active swimmers and algae-grazers that bring movement and cleaning power." },
   { kind: "fish", slug: "angelfish-oddballs", name: "Angelfish & Oddballs", sortOrder: 8, icon: "🪸", color: "#2dd4bf", image: img("angelfish,aquarium", 108), description: "Elegant angels and fascinating oddballs — from black ghost knifefish to alligator gar." },
+  { kind: "fish", slug: "snails-invertebrates", name: "Snails & Invertebrates", sortOrder: 9, icon: "🐌", color: "#f59e0b", image: img("snail,aquarium", 109), description: "Algae-eating snails and peaceful invertebrates — beautiful, useful and safe with all fish." },
 ];
 
 /** Accessory / product categories (from the store's catalogue). */

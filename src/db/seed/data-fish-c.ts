@@ -90,7 +90,7 @@ export const fishC: FishSeed[] = [
     origin: "North America", t: [22, 28], ph: [6.5, 8.0], diff: "expert", agg: "aggressive",
     tank: 2000, size: 120, life: "20+ years", diet: "Carnivore — fish, prawns, meaty foods",
     compat: "Predatory; only very large tankmates it cannot swallow.",
-    price: 600, stock: 5, avail: "low_stock", imp: true, lock: 1033, kw: "gar,predator,fish",
+    price: 7000, offer: 6001, stock: 5, avail: "low_stock", imp: true, lock: 1033, kw: "gar,predator,fish",
     tags: ["monster fish", "predator", "prehistoric"],
   },
   {

@@ -97,7 +97,7 @@ export const faqs = [
   { question: "Are your fish healthy and quarantined?", answer: "Yes. All our fish are kept in monitored, filtered systems and observed before sale. We only sell healthy, active stock and give you care guidance for each species.", category: "general", sortOrder: 2 },
   { question: "Do you sell imported fish?", answer: "We regularly stock imported species like Thailand flowerhorns and premium goldfish strains. Ask us about current imports or check the 'Imported' tag on our fish pages.", category: "stock", sortOrder: 3 },
   { question: "Can you help me set up a new aquarium?", answer: "Absolutely — aquarium setup is one of our services. We help you choose the tank, filter, lighting, substrate and a compatible fish community for your space and budget.", category: "service", sortOrder: 4 },
-  { question: "How do I know which fish can live together?", answer: "Use our Fish Compatibility Checker and Aquarium Planner tools on this site, or just ask us. We'll recommend a peaceful, thriving community for your tank size.", category: "care", sortOrder: 5 },
+  { question: "How do I know which fish can live together?", answer: "Just ask us! Our experts will recommend a peaceful, thriving community for your tank size. You can also browse each fish's compatibility info on its detail page.", category: "care", sortOrder: 5 },
   { question: "What water conditions do I need?", answer: "It depends on the species — each fish page lists ideal temperature and pH. Bring a water sample for a free test and we'll advise on conditioners and adjustments.", category: "care", sortOrder: 6 },
   { question: "Do you offer any guarantee?", answer: "We stand behind our stock. If you have any issue shortly after purchase, contact us with photos and we'll do our best to make it right.", category: "general", sortOrder: 7 },
   { question: "What are your opening hours?", answer: "We're open 9:00 AM to 8:00 PM Monday–Saturday (till 8:30 PM Sat) and 10:00 AM to 6:00 PM on Sunday. Find us near Eye Hospital, Kuthuparamba.", category: "general", sortOrder: 8 },
@@ -108,16 +108,12 @@ export const navItems = [
   { label: "Home", url: "/", location: "header" as const, sortOrder: 1 },
   { label: "Fish", url: "/fish", location: "header" as const, sortOrder: 2 },
   { label: "Accessories", url: "/accessories", location: "header" as const, sortOrder: 3 },
-  { label: "Aquarium Planner", url: "/planner", location: "header" as const, sortOrder: 4 },
-  { label: "Compatibility", url: "/compatibility", location: "header" as const, sortOrder: 5 },
-  { label: "Gallery", url: "/gallery", location: "header" as const, sortOrder: 6 },
-  { label: "Blog", url: "/blog", location: "header" as const, sortOrder: 7 },
-  { label: "Contact", url: "/contact", location: "header" as const, sortOrder: 8 },
+  { label: "Gallery", url: "/gallery", location: "header" as const, sortOrder: 4 },
+  { label: "Contact", url: "/contact", location: "header" as const, sortOrder: 5 },
   { label: "Fish", url: "/fish", location: "footer" as const, sortOrder: 1 },
   { label: "Accessories", url: "/accessories", location: "footer" as const, sortOrder: 2 },
   { label: "Gallery", url: "/gallery", location: "footer" as const, sortOrder: 3 },
-  { label: "Fish Care Blog", url: "/blog", location: "footer" as const, sortOrder: 4 },
-  { label: "Contact & Directions", url: "/contact", location: "footer" as const, sortOrder: 5 },
+  { label: "Contact & Directions", url: "/contact", location: "footer" as const, sortOrder: 4 },
 ];
 
 /* Gallery — customer tanks, aquascapes, before/after. */
