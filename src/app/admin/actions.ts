@@ -130,8 +130,7 @@ export async function saveFish(formData: FormData): Promise<void> {
     varieties: (() => {
       const raw = str(formData, "varieties");
       if (!raw) return null;
-      return raw.split("
-").filter(Boolean).map(line => {
+            return raw.split('\n').filter(Boolean).map(line => {
         const parts = line.split("|").map(s => s.trim());
         return { name: parts[0] || "", price: parts[1] ? Number(parts[1]) : undefined, offerPrice: parts[2] ? Number(parts[2]) : undefined };
       });
@@ -396,8 +395,7 @@ export async function savePost(formData: FormData): Promise<void> {
     varieties: (() => {
       const raw = str(formData, "varieties");
       if (!raw) return null;
-      return raw.split("
-").filter(Boolean).map(line => {
+            return raw.split('\n').filter(Boolean).map(line => {
         const parts = line.split("|").map(s => s.trim());
         return { name: parts[0] || "", price: parts[1] ? Number(parts[1]) : undefined, offerPrice: parts[2] ? Number(parts[2]) : undefined };
       });

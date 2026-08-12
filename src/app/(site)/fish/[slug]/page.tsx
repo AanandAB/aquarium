@@ -225,9 +225,9 @@ export default async function FishDetailPage({
           </Reveal>
         </div>
 
-        {/* Long description + care guide + compatibility */}
-        <div className="mt-14 grid gap-8 lg:grid-cols-3">
-          <Reveal className="lg:col-span-2">
+        {/* Long description + care guide */}
+        <div className="mt-14">
+          <Reveal>
             <div className="rounded-3xl glass p-7">
               <h2 className="text-2xl font-semibold text-ink">About the {fish.name}</h2>
               <p className="mt-4 whitespace-pre-line leading-relaxed text-ink/75">
@@ -243,24 +243,6 @@ export default async function FishDetailPage({
               )}
             </div>
           </Reveal>
-          {fish.compatibility && (
-            <Reveal delay={0.1}>
-              <div className="h-full rounded-3xl glass-strong p-7">
-                <h3 className="text-lg font-semibold text-ink">
-                  Compatibility
-                </h3>
-                <p className="mt-3 text-sm leading-relaxed text-ink/75">
-                  {fish.compatibility}
-                </p>
-                <Link
-                  href="/compatibility"
-                  className="mt-5 inline-block text-sm font-medium text-aqua hover:text-turquoise"
-                >
-                  Check compatibility tool →
-                </Link>
-              </div>
-            </Reveal>
-          )}
         </div>
 
         {/* Related */}

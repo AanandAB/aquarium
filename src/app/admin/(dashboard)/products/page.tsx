@@ -219,8 +219,7 @@ export default async function AdminProducts({
             </div>
             <div className="mt-4">
               <Field label="Varieties" hint="One per line: Label | Value (e.g. 10W | ₹550)">
-                <textarea name="varieties" rows={3} defaultValue={(p?.varieties ?? []).map((v: any) => [v.label, v.value].filter(Boolean).join(' | ')).join('
-')} className={inputCls} />
+                <textarea name="varieties" rows={3} defaultValue={(p?.varieties ?? []).map((v: any) => [v.label, v.value].filter(Boolean).join(' | ')).join('\n')} className={inputCls} />
               </Field>
             </div>
             <div className="mt-4">

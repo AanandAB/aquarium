@@ -331,10 +331,6 @@ export async function getPlannerPresets() {
     .orderBy(asc(s.plannerPresets.sortOrder));
 }
 
-export async function getCompatibilityPairs() {
-  return getDb().select().from(s.fishCompatibility);
-}
-
 /** Published tank equipment-pricing tiers for the planner estimate. */
 export async function getTankPricing() {
   return getDb()
