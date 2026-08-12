@@ -304,6 +304,7 @@ export const products = sqliteTable(
       "available",
     ),
     varieties: text("varieties", { mode: "json" }).$type<SpecItem[]>(),
+    variantIds: text("variant_ids", { mode: "json" }).$type<string[]>(),
     heroImage: text("hero_image"),
     gallery: text("gallery", { mode: "json" }).$type<string[]>(),
     video: text("video"),

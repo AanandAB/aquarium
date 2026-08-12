@@ -7,7 +7,7 @@ import { Container, Badge, Button } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/Reveal";
 import { ProductCard } from "@/components/cards/ProductCard";
 import FishGallery from "@/components/fish/FishGallery";
-import { getProductBySlug, getProductList, getSiteSettings } from "@/lib/queries";
+import { getProductBySlug, getProductList, getProductsBySlugs, getSiteSettings } from "@/lib/queries";
 import {
   formatPrice, discountPct, whatsappHref, callHref, AVAILABILITY_LABELS,
 } from "@/lib/utils";
@@ -48,6 +48,9 @@ export default async function ProductDetailPage({
   const whatsapp = settings?.whatsapp ?? SITE.whatsapp;
   const phone = settings?.phone ?? SITE.phone;
   const related = catProducts.filter((p) => p.id !== product.id).slice(0, 4);
+  const variantProducts = product.variantIds?.length
+    ? await getProductsBySlugs(product.variantIds as string[])
+    : [];
 
   const off = discountPct(product.price, product.offerPrice);
   const price = product.offerPrice ?? product.price;
@@ -161,6 +164,32 @@ export default async function ProductDetailPage({
                     >
                       {v.label}{v.value ? ' — ' + v.value : ''}
                     </span>
+                  ))}
+                </div>
+              </div>
+            )}
+
+            {/* Linked variant products */}
+            {variantProducts.length > 0 && (
+              <div className="mt-8">
+                <p className="mb-3 text-xs uppercase tracking-wide text-ink/60">
+                  Also available in
+                </p>
+                <div className="grid grid-cols-2 gap-3">
+                  {variantProducts.map((vp) => (
+                    <Link
+                      key={vp.id}
+                      href={`/accessories/${vp.slug}`}
+                      className="flex items-center gap-3 rounded-xl border border-ink/10 bg-[#fffdf8] p-3 hover:border-aqua/30 transition-colors"
+                    >
+                      {vp.heroImage && (
+                        <img src={vp.heroImage} alt={vp.name} className="h-12 w-12 rounded-lg object-cover" />
+                      )}
+                      <div className="min-w-0">
+                        <p className="text-sm font-medium text-ink truncate">{vp.name}</p>
+                        <p className="text-xs text-ink/60">{formatPrice(vp.offerPrice ?? vp.price)}</p>
+                      </div>
+                    </Link>
                   ))}
                 </div>
               </div>

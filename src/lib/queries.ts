@@ -244,6 +244,19 @@ export async function getProductBySlug(slug: string): Promise<ProductCard | null
   return row ?? null;
 }
 
+export async function getProductsBySlugs(slugs: string[]): Promise<ProductCard[]> {
+  if (!slugs.length) return [];
+  const db = getDb();
+  return db.select({
+    ...getTableColumns(s.products),
+    categoryName: s.categories.name,
+    categorySlug: s.categories.slug,
+  }).from(s.products)
+    .leftJoin(s.categories, eq(s.products.categoryId, s.categories.id))
+    .where(and(eq(s.products.published, true), ...slugs.map(slug => eq(s.products.slug, slug)) as any))
+    .limit(20);
+}
+
 /* -------------------------------------------------------------------------- */
 /*  Offers / gallery / testimonials / faqs                                    */
 /* -------------------------------------------------------------------------- */
