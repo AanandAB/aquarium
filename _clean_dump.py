@@ -1,29 +1,25 @@
-"""Simple D1 dump cleaner: remove d1_migrations, CREATE TABLE/INDEX, keep PRAGMA + INSERTs + add DELETEs."""
+"""Clean a D1 export: strip d1_migrations + CREATE TABLE/INDEX, keep PRAGMA + DELETEs + INSERTs."""
 import re
 
 with open(r'C:\Users\aanan\Desktop\AANAND AB\PROJECTS\aquarium\drizzle\seed-dump.sql', 'r', encoding='utf-8') as f:
     lines = f.readlines()
 
-# Step 1: Remove d1_migrations CREATE TABLE block + INSERTs
+# Step 1: strip d1_migrations
 cleaned = []
-skip_until_semicolon = False
+skip = False
 for line in lines:
-    # Detect d1_migrations CREATE TABLE (multi-line)
-    if 'CREATE TABLE' in line and 'd1_migrations' in line:
-        if line.rstrip().endswith(');'):
+    if 'd1_migrations' in line:
+        if 'CREATE TABLE' in line and not line.rstrip().endswith(');'):
+            skip = True
             continue
-        skip_until_semicolon = True
         continue
-    if skip_until_semicolon:
+    if skip:
         if line.rstrip().endswith(');'):
-            skip_until_semicolon = False
-        continue
-    # Skip d1_migrations INSERTs (single-line)
-    if 'INSERT INTO' in line and 'd1_migrations' in line:
+            skip = False
         continue
     cleaned.append(line)
 
-# Step 2: Remove all CREATE TABLE / CREATE INDEX blocks
+# Step 2: strip CREATE TABLE / INDEX blocks
 final = []
 skip_create = False
 for line in cleaned:
@@ -39,14 +35,14 @@ for line in cleaned:
         continue
     final.append(line)
 
-# Step 3: Find table names from INSERTs
+# Step 3: find table names
 table_names = set()
 for line in final:
     m = re.match(r'INSERT INTO "(\w+)"', line)
     if m:
         table_names.add(m.group(1))
 
-# Step 4: Add DELETEs before INSERTs
+# Step 4: prepend DELETEs in FK-safe order
 delete_order = [
     'fish_compatibility', 'planner_presets', 'homepage_sections',
     'nav_items', 'gallery_items', 'testimonials', 'faqs', 'offers',
@@ -64,7 +60,7 @@ out_path = r'C:\Users\aanan\Desktop\AANAND AB\PROJECTS\aquarium\drizzle\seed-dum
 with open(out_path, 'w', encoding='utf-8') as f:
     f.writelines(output)
 
-print(f'Lines: {len(output)}')
-print(f'Tables with DELETEs: {[t for t in delete_order if t in table_names]}')
 fish_count = sum(1 for l in output if 'INSERT INTO "fish"' in l)
-print(f'Fish INSERTs in output: {fish_count}')
+prod_count = sum(1 for l in output if 'INSERT INTO "products"' in l)
+print(f'Lines: {len(output)} | fish: {fish_count} | products: {prod_count}')
+print(f'Tables: {[t for t in delete_order if t in table_names]}')

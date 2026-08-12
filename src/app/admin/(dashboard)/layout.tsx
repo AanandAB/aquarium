@@ -10,9 +10,11 @@ export default async function DashboardLayout({
 }) {
   const session = await requireAdmin("viewer");
   return (
-    <div className="flex">
+    <div className="lg:flex">
       <AdminSidebar name={session.name ?? session.email} role={session.role} />
-      <div className="min-w-0 flex-1 p-6 sm:p-8">{children}</div>
+      <div className="min-w-0 flex-1">
+        <main className="p-4 sm:p-6 lg:p-8">{children}</main>
+      </div>
     </div>
   );
 }

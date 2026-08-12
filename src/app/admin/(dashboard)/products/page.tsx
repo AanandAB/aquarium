@@ -83,7 +83,67 @@ export default async function AdminProducts({
       </div>
 
       {/* ----------------------------- list ----------------------------- */}
-      <div className="mt-6 overflow-hidden rounded-2xl border border-ink/10 bg-[#fffdf8]">
+      {/* Mobile card list */}
+      <div className="mt-5 space-y-3 md:hidden">
+        {products.length === 0 && (
+          <p className="rounded-2xl border border-ink/10 bg-[#fffdf8] px-4 py-8 text-center text-ink/45">
+            No products yet. Use the form below to add your first one.
+          </p>
+        )}
+        {products.map((row) => (
+          <div key={row.id} className="rounded-2xl border border-ink/10 bg-[#fffdf8] p-4">
+            <div className="flex items-start justify-between gap-3">
+              <div className="min-w-0">
+                <p className="font-medium text-ink">{row.name}</p>
+                <p className="text-xs text-ink/45">{row.categoryName ?? "—"}</p>
+              </div>
+              <div className="text-right">
+                {row.offerPrice != null ? (
+                  <div>
+                    <p className="font-medium text-ink">{money(row.offerPrice)}</p>
+                    <p className="text-xs text-ink/40 line-through">{money(row.price)}</p>
+                  </div>
+                ) : (
+                  <p className="font-medium text-ink">{money(row.price)}</p>
+                )}
+              </div>
+            </div>
+            <div className="mt-3 flex items-center justify-between gap-2 border-t border-ink/10 pt-3">
+              <div className="flex items-center gap-2">
+                <span className="text-xs text-ink/60">Stock: {row.stock}</span>
+                <form action={toggleProductPublished}>
+                  <input type="hidden" name="id" value={row.id} />
+                  <button
+                    type="submit"
+                    className={`inline-flex items-center gap-1 rounded-full px-2.5 py-1 text-xs font-medium ${
+                      row.published ? "bg-emerald-500/15 text-emerald-700" : "bg-ink/8 text-ink/50"
+                    }`}
+                  >
+                    {row.published ? <><Eye className="h-3.5 w-3.5" /> Live</> : <><EyeOff className="h-3.5 w-3.5" /> Hidden</>}
+                  </button>
+                </form>
+              </div>
+              <div className="flex items-center gap-2">
+                <Link
+                  href={`/admin/products?edit=${row.id}`}
+                  className="inline-flex items-center gap-1 rounded-lg bg-ink/[0.06] px-3 py-1.5 text-xs text-ink hover:bg-ink/12"
+                >
+                  <Pencil className="h-3.5 w-3.5" /> Edit
+                </Link>
+                <form action={deleteProduct}>
+                  <input type="hidden" name="id" value={row.id} />
+                  <button type="submit" className="rounded-lg bg-rose-500/12 px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-500/20">
+                    Delete
+                  </button>
+                </form>
+              </div>
+            </div>
+          </div>
+        ))}
+      </div>
+
+      {/* Desktop table */}
+      <div className="mt-6 hidden overflow-hidden rounded-2xl border border-ink/10 bg-[#fffdf8] md:block">
         <table className="w-full text-sm">
           <thead className="border-b border-ink/10 bg-ink/[0.03] text-left text-xs uppercase tracking-wide text-ink/55">
             <tr>
@@ -104,10 +164,7 @@ export default async function AdminProducts({
               </tr>
             )}
             {products.map((row) => (
-              <tr
-                key={row.id}
-                className="border-t border-ink/8 hover:bg-clay/[0.04]"
-              >
+              <tr key={row.id} className="border-t border-ink/8 hover:bg-clay/[0.04]">
                 <td className="px-4 py-3">
                   <p className="font-medium text-ink">{row.name}</p>
                   <p className="text-xs text-ink/45">{row.slug}</p>
@@ -133,16 +190,10 @@ export default async function AdminProducts({
                       type="submit"
                       title={row.published ? "Published — click to hide" : "Hidden — click to publish"}
                       className={`inline-flex items-center gap-1.5 rounded-full px-2.5 py-1 text-xs font-medium ${
-                        row.published
-                          ? "bg-emerald-500/15 text-emerald-700"
-                          : "bg-ink/8 text-ink/50"
+                        row.published ? "bg-emerald-500/15 text-emerald-700" : "bg-ink/8 text-ink/50"
                       }`}
                     >
-                      {row.published ? (
-                        <><Eye className="h-3.5 w-3.5" /> Live</>
-                      ) : (
-                        <><EyeOff className="h-3.5 w-3.5" /> Hidden</>
-                      )}
+                      {row.published ? <><Eye className="h-3.5 w-3.5" /> Live</> : <><EyeOff className="h-3.5 w-3.5" /> Hidden</>}
                     </button>
                   </form>
                 </td>
@@ -156,10 +207,7 @@ export default async function AdminProducts({
                     </Link>
                     <form action={deleteProduct}>
                       <input type="hidden" name="id" value={row.id} />
-                      <button
-                        type="submit"
-                        className="rounded-lg bg-rose-500/12 px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-500/20"
-                      >
+                      <button type="submit" className="rounded-lg bg-rose-500/12 px-3 py-1.5 text-xs text-rose-600 hover:bg-rose-500/20">
                         Delete
                       </button>
                     </form>
