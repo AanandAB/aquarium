@@ -1,227 +1,196 @@
-# Happy Aquarium — Client Handover Guide
+# 🐠 Happy Aquarium — Client Handover Guide
 
-## What you're getting
+This document is for the **client** (the aquarium store owner) or anyone setting up
+the website on a new Cloudflare account. It explains, step by step, how to get the
+site live, and how to run it day-to-day.
 
-A complete aquarium store website + admin CMS running on Cloudflare's free tier:
-- **Storefront** — fish catalogue (49 species), accessories, gallery, contact form, WhatsApp CTAs
-- **Admin CMS** — edit fish, products, blog, offers, homepage sections, settings
-- **Hosting** — Cloudflare Workers + D1 database, ₹0/month indefinitely
+**Two ways to set up:**
 
----
+- **Option A (easiest):** you (the developer) do everything for the client — you just
+  need their Cloudflare login or an API token. See *Part 1*.
+- **Option B:** the client does it themselves following the commands in *Part 2*.
 
-## Prerequisites
-
-- A [Cloudflare account](https://dash.cloudflare.com/sign-up) (free)
-- A [GitHub account](https://github.com/signup) (free)
-- Node.js installed on your computer ([download](https://nodejs.org/))
+After setup, the client manages everything from the admin panel — see *Part 3*.
 
 ---
 
-## Step 1 — Fork the repository
+## Part 1 — Do it for the client (you have their Cloudflare access)
 
-1. Go to https://github.com/AanandAB/aquarium
-2. Click **Fork** (top-right) → Create fork
+If the client has **forked** the repo already, and gives you their Cloudflare
+credentials (login, or better, an API token), here is the exact sequence.
 
----
+### 1.1 Get access
 
-## Step 2 — Clone to your computer
+Ask the client to create an API token (safer than sharing a password):
+
+1. Cloudflare Dashboard → **My Profile** (top-right icon) → **API Tokens**
+2. Create Token → use the **"Edit Cloudflare Workers"** template
+3. Copy the token **and** their **Account ID** (shown on the right sidebar of the dashboard)
+
+### 1.2 Log in as them
 
 ```bash
-git clone https://github.com/YOUR_USERNAME/aquarium.git
-cd aquarium
-npm install
+export CLOUDFLARE_API_TOKEN=<the token>
+export CLOUDFLARE_ACCOUNT_ID=<their account id>
 ```
 
----
-
-## Step 3 — Login to Cloudflare
-
-```bash
-npx wrangler login
-```
-
-This opens a browser — approve the connection.
-
----
-
-## Step 4 — Create the database
+### 1.3 Create the database
 
 ```bash
 npx wrangler d1 create happy-aquarium-db
 ```
 
-Copy the `database_id` from the output. Open `wrangler.jsonc` and paste it on line 18:
+Copy the returned `database_id`.
 
-```json
-"database_id": "your-id-here",
-```
+### 1.4 Update `wrangler.jsonc` with their database id
 
-Commit this change:
+In the client's fork, edit `wrangler.jsonc` and replace the `database_id` value with
+theirs. Commit + push.
+
+### 1.5 Create the schema + load all content
 
 ```bash
-git add wrangler.jsonc && git commit -m "Update database ID" && git push
+npm install
+npm run db:migrate:remote
+npx wrangler d1 execute happy-aquarium-db --remote --file drizzle/seed-dump-clean.sql
 ```
+
+This loads **49 fish, 21 products, all categories, nav, blog, FAQs, offers,
+testimonials, homepage layout, and the default admin user.**
+
+### 1.6 Set the auth secret
+
+```bash
+npx wrangler secret put AUTH_SECRET
+```
+
+Paste a long random string (mash the keyboard for 30+ characters). Save it — you'll
+need the same value in the Workers Builds env var below.
+
+### 1.7 Connect GitHub → Cloudflare Workers Builds
+
+1. Cloudflare Dashboard → **Workers & Pages → Create → Workers Builds**
+2. Connect the client's GitHub account, select the forked repo
+3. Set the build config:
+
+   | Setting | Value |
+   |---------|-------|
+   | Build command | `npm run build` |
+   | Deploy command | `npx wrangler deploy` |
+
+4. Add environment variable:
+
+   | Name | Value |
+   |------|-------|
+   | `AUTH_SECRET` | *(same value from step 1.6)* |
+
+5. **Save and Deploy.** The site goes live at
+   `https://happy-aquarium.<client>.workers.dev` in ~5 minutes.
+
+> ⚠️ **Important:** the build command MUST be `npm run build` and deploy command
+> MUST be `npx wrangler deploy`. Any other combo will fail. (The `build` script in
+> `package.json` already points to the full OpenNext build, so `npm run build`
+> produces everything `npx wrangler deploy` needs.)
 
 ---
 
-## Step 5 — Seed the database
+## Part 2 — Client does it themselves (step by step)
+
+### Prerequisites
+- Cloudflare account (free)
+- GitHub account (free)
+- Node.js installed
+
+### Steps
+
+```bash
+# 1. Fork the repo on GitHub (button in top-right), then clone it
+git clone https://github.com/THEIR_USERNAME/aquarium.git
+cd aquarium
+npm install
+
+# 2. Log in to Cloudflare
+npx wrangler login
+
+# 3. Create the database — copy the database_id
+npx wrangler d1 create happy-aquarium-db
+
+# 4. Edit wrangler.jsonc — paste the database_id, commit + push
+
+# 5. Create schema + load all content
+npm run db:migrate:remote
+npx wrangler d1 execute happy-aquarium-db --remote --file drizzle/seed-dump-clean.sql
+
+# 6. Set the auth secret
+npx wrangler secret put AUTH_SECRET
+```
+
+Then connect GitHub to Workers Builds exactly as in **Part 1.7**.
+
+---
+
+## Part 3 — Running the site day-to-day
+
+### Log in to the admin panel
+
+Go to `https://your-site/admin/login`
+
+- **Email:** `admin@happyaquarium.in`
+- **Password:** `admin123`
+
+> 🔴 **Do this first:** change the password (Settings → Users).
+
+### The complete admin guide
+
+A full, plain-English guide with screenshots-style instructions is in this repo as
+**`ADMIN-GUIDE.html`** — just double-click it to open in any browser. It covers:
+
+- Adding / editing / deleting fish
+- Adding accessories &amp; products
+- Uploading images
+- Pair vs single pricing
+- Setting up variants (sizes, wattages, colour types)
+- Creating offers &amp; discounts
+- Managing categories, gallery, testimonials, FAQs
+- Editing the homepage sections
+- Updating store info (phone, WhatsApp, address, map, hours, socials)
+- Handling customer enquiries
+- Changing the password
+
+### Key facts to remember
+
+| Thing | Detail |
+|-------|--------|
+| Admin URL | `/admin/login` |
+| Fish in catalogue | 49 species |
+| Products | 21 items |
+| Pair rate | default for most fish (guppies, tetras, cichlids, etc.) |
+| Single rate | bettas, flowerhorn, alligator gar, snails, large predators |
+| Variants | link same-item versions (e.g. LED 10W/15W/20W) via the Variants dropdown |
+| WhatsApp | set in Settings — must be international format, e.g. `919947770808` |
+
+### Re-seeding / resetting to factory state
+
+If the client ever wants to wipe and restore the original content:
 
 ```bash
 npm run db:migrate:remote
 npx wrangler d1 execute happy-aquarium-db --remote --file drizzle/seed-dump-clean.sql
 ```
 
-This loads all 49 fish, 21 products, categories, blog posts, FAQs, navigation, and homepage layout.
-
 ---
 
-## Step 6 — Set the admin password secret
+## Files in this repo (what's what)
 
-```bash
-npx wrangler secret put AUTH_SECRET
-```
-
-Enter a long random string (e.g., mash your keyboard for 30+ characters). Save this value — you'll need it if you ever change the Cloudflare project.
-
----
-
-## Step 7 — Deploy to Cloudflare
-
-Go to **Cloudflare Dashboard → Workers & Pages → Create → Workers Builds**.
-
-1. Connect your GitHub account
-2. Select the `aquarium` repository
-3. Leave build settings:
-
-   | Setting | Value |
-   |---------|-------|
-   | Build command | `npm run build` |
-   | Deploy command | `npm run deploy` |
-
-   > **Important:** Use `npm run deploy` (not `npx wrangler deploy`) as the deploy command. This runs the full OpenNext build + Cloudflare deploy in one step.
-
-4. Add environment variable:
-
-   | Name | Value |
-   |------|-------|
-   | `AUTH_SECRET` | *(same value from Step 6)* |
-
-5. Click **Save and Deploy**
-
-Your site will be live at `https://happy-aquarium.YOUR_USERNAME.workers.dev` in about 3-5 minutes.
-
----
-
-## Step 8 — Customize store details
-
-Log into the admin panel at `/admin/login`:
-- **Email:** `admin@happyaquarium.in`
-- **Password:** `admin123`
-
-**Do these immediately:**
-
-1. **Change password** — Settings → scroll to Users section
-2. **Update store info** — Settings:
-   - Store name, tagline, description
-   - Phone number, WhatsApp number
-   - Address, area, city, state, pincode
-   - Map coordinates (lat/lng)
-   - Opening hours
-   - Social media links (Instagram, Facebook, YouTube)
-3. **Update homepage** — Homepage Builder:
-   - Edit hero text, badges, CTAs
-   - Reorder or hide sections
-4. **Upload images** — Fish → click any fish → upload real photo
-   - Each fish has a hero image field
-   - Products also support image uploads
-   - Images you upload go to Cloudflare R2 (needs setup — see below)
-
----
-
-## Optional — Add your own domain
-
-1. In Cloudflare Dashboard → Workers & Pages → `happy-aquarium`
-2. Go to **Custom Domains** → Add your domain
-3. DNS is handled automatically if the domain is on Cloudflare
-
----
-
-## Optional — Image storage (R2)
-
-Images uploaded through admin need an R2 bucket:
-
-```bash
-npx wrangler r2 bucket create happy-aquarium-media
-```
-
-Add to `wrangler.jsonc` under `d1_databases`:
-
-```json
-"r2_buckets": [
-  {
-    "binding": "MEDIA",
-    "bucket_name": "happy-aquarium-media"
-  }
-]
-```
-
-Redeploy from the Cloudflare dashboard. Images will now persist properly.
-
----
-
-## Admin capabilities
-
-| Section | What you can do |
-|---------|----------------|
-| **Fish** | Add/edit/delete fish. 30+ fields: name, scientific name, category, price (single/pair), temperature, pH, difficulty, diet, care guide, images |
-| **Products** | Manage accessories, equipment, food, medicines |
-| **Enquiries** | View customer enquiries from the contact form |
-| **Offers** | Create time-limited offers with countdowns |
-| **Blog** | Write care articles, news posts |
-| **Gallery** | Upload customer tank photos, store photos |
-| **Testimonials** | Add customer reviews with ratings |
-| **FAQs** | Edit frequently asked questions |
-| **Categories** | Manage fish/product categories |
-| **Homepage** | Add/remove/reorder homepage sections |
-| **Settings** | Store info, contact, socials, SEO metadata |
-
----
-
-## Rate types (pair vs single)
-
-- **Pair rate** (35 fish): guppies, mollies, tetras, cichlids, goldfish, catfish, gouramis — price is for a pair
-- **Single rate** (14 fish): bettas, flowerhorn, alligator gar, snails, large predators — price is per fish
-
-Edit in admin → Fish → click a fish → scroll to "Rate Type" dropdown.
-
----
-
-## Updating prices
-
-1. Go to `/admin/fish` or `/admin/products`
-2. Click any item
-3. Edit the Price and Offer Price fields
-4. Save
-
-Changes appear instantly on the live site.
-
----
-
-## Re-seeding after customization
-
-If you want to reset the database to factory state:
-
-```bash
-# Re-seed local (preview)
-npm run db:seed:local
-
-# Export + clean
-npx wrangler d1 export happy-aquarium-db --local --output drizzle/seed-dump.sql
-py -3.12 _clean_dump.py
-
-# Push to production
-npx wrangler d1 execute happy-aquarium-db --remote --file drizzle/seed-dump-clean.sql
-```
+| File | Purpose |
+|------|---------|
+| `HANDOVER.md` | This guide |
+| `ADMIN-GUIDE.html` | Plain-English admin manual (open in browser) |
+| `drizzle/seed-dump-clean.sql` | One-shot full content import (49 fish + 21 products + everything) |
+| `drizzle/migrations/` | Database schema migrations |
+| `wrangler.jsonc` | Cloudflare config — **the client must put their own `database_id` here** |
+| `src/db/seed/` | The seed data source files |
+| `public/images/fish/` | 49 real fish photos |
 
 ---
 
@@ -229,18 +198,13 @@ npx wrangler d1 execute happy-aquarium-db --remote --file drizzle/seed-dump-clea
 
 | Problem | Fix |
 |---------|-----|
-| Site shows "Worker not found" | Wait 3-5 min for deployment to finish |
-| Categories show no fish | Database wasn't seeded — redo Step 5 |
-| Images not loading | Upload images via admin panel or set up R2 (see above) |
-| Admin login fails | Verify `AUTH_SECRET` matches in Workers Builds env vars |
-| Build fails on deploy | Run `npm run typecheck` locally to find TypeScript errors |
+| Deploy fails "Could not find compiled Open Next config" | Deploy command is wrong — must be `npx wrangler deploy` and build must be `npm run build` |
+| Site shows no fish | Database wasn't seeded — re-run the `seed-dump-clean.sql` import |
+| Admin login fails | `AUTH_SECRET` env var doesn't match the secret you set |
+| Images missing | Upload them via admin, or check `public/images/fish/` exists |
+| Custom domain not working | Add it in Cloudflare → Workers → Triggers → Custom Domains |
+| Categories empty | The category has no fish assigned — edit the fish and set its category |
 
 ---
 
-## Support
-
-For code-level issues, the original developer can be reached through the GitHub repository. For Cloudflare-specific issues, [Cloudflare Workers docs](https://developers.cloudflare.com/workers/) are the best resource.
-
----
-
-*Built with Next.js 16, React 19, Cloudflare Workers, D1, Tailwind CSS v4, Drizzle ORM.*
+*Built with Next.js 16, React 19, Cloudflare Workers + D1, Tailwind CSS v4, Drizzle ORM.*
