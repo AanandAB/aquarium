@@ -140,6 +140,7 @@ export async function saveFish(formData: FormData): Promise<void> {
     isImported: bool(formData, "isImported"),
     isNewArrival: bool(formData, "isNewArrival"),
     published: bool(formData, "published"),
+    variantIds: formData.getAll("variantIds").map(String).filter(Boolean),
     metaTitle: str(formData, "metaTitle"),
     metaDescription: str(formData, "metaDescription"),
     updatedAt: new Date(),
@@ -328,11 +329,7 @@ export async function saveProduct(formData: FormData): Promise<void> {
     featured: bool(formData, "featured"),
     trending: bool(formData, "trending"),
     published: bool(formData, "published"),
-    variantIds: (() => {
-      const raw = str(formData, "variantIds");
-      if (!raw) return null;
-      return raw.split(',').map(s => s.trim()).filter(Boolean);
-    })(),
+    variantIds: formData.getAll("variantIds").map(String).filter(Boolean),
     sortOrder: num(formData, "sortOrder") ?? 0,
     metaTitle: str(formData, "metaTitle"),
     metaDescription: str(formData, "metaDescription"),
@@ -456,11 +453,7 @@ export async function saveGalleryItem(formData: FormData): Promise<void> {
     kind: (str(formData, "category") ?? "showcase") as (typeof s.GALLERY_KINDS)[number],
     featured: bool(formData, "featured"),
     published: bool(formData, "published"),
-    variantIds: (() => {
-      const raw = str(formData, "variantIds");
-      if (!raw) return null;
-      return raw.split(',').map(s => s.trim()).filter(Boolean);
-    })(),
+    variantIds: formData.getAll("variantIds").map(String).filter(Boolean),
     sortOrder: num(formData, "sortOrder") ?? 0,
     updatedAt: new Date(),
   };
@@ -503,11 +496,7 @@ export async function saveTestimonial(formData: FormData): Promise<void> {
     avatar: str(formData, "avatar"),
     featured: bool(formData, "featured"),
     published: bool(formData, "published"),
-    variantIds: (() => {
-      const raw = str(formData, "variantIds");
-      if (!raw) return null;
-      return raw.split(',').map(s => s.trim()).filter(Boolean);
-    })(),
+    variantIds: formData.getAll("variantIds").map(String).filter(Boolean),
     sortOrder: num(formData, "sortOrder") ?? 0,
     updatedAt: new Date(),
   };
@@ -550,11 +539,7 @@ export async function saveCategory(formData: FormData): Promise<void> {
     description: str(formData, "description"),
     image: str(formData, "image"),
     published: bool(formData, "published"),
-    variantIds: (() => {
-      const raw = str(formData, "variantIds");
-      if (!raw) return null;
-      return raw.split(',').map(s => s.trim()).filter(Boolean);
-    })(),
+    variantIds: formData.getAll("variantIds").map(String).filter(Boolean),
     sortOrder: num(formData, "sortOrder") ?? 0,
   };
   if (id) await db.update(s.categories).set(data).where(eq(s.categories.id, id));
@@ -582,11 +567,7 @@ export async function saveFaq(formData: FormData): Promise<void> {
     answer: str(formData, "answer") ?? "",
     category: str(formData, "category") ?? "general",
     published: bool(formData, "published"),
-    variantIds: (() => {
-      const raw = str(formData, "variantIds");
-      if (!raw) return null;
-      return raw.split(',').map(s => s.trim()).filter(Boolean);
-    })(),
+    variantIds: formData.getAll("variantIds").map(String).filter(Boolean),
     sortOrder: num(formData, "sortOrder") ?? 0,
   };
   if (id) await db.update(s.faqs).set(data).where(eq(s.faqs.id, id));

@@ -12,6 +12,7 @@ import {
   toggleProductPublished,
 } from "@/app/admin/actions";
 import ImageField from "@/components/admin/ImageField";
+import VariantPicker from "@/components/admin/VariantPicker";
 
 export const dynamic = "force-dynamic";
 

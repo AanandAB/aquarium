@@ -2,13 +2,14 @@ import { notFound } from "next/navigation";
 import Link from "next/link";
 import { ArrowLeft } from "lucide-react";
 import {
-  requireAdmin, getFishByIdAdmin, getFishCategoriesAdmin,
+  requireAdmin, getFishByIdAdmin, getFishCategoriesAdmin, listFishAdmin,
 } from "@/lib/admin";
 import { saveFish } from "@/app/admin/actions";
 import {
   DIFFICULTY_LEVELS, AGGRESSION_LEVELS, WATER_TYPES, AVAILABILITY,
 } from "@/db/schema";
 import ImageField from "@/components/admin/ImageField";
+import VariantPicker from "@/components/admin/VariantPicker";
 
 export const dynamic = "force-dynamic";
 
@@ -33,9 +34,10 @@ export default async function FishForm({
   await requireAdmin("staff");
   const { id } = await params;
   const isNew = id === "new";
-  const [fish, categories] = await Promise.all([
+  const [fish, categories, allFish] = await Promise.all([
     isNew ? Promise.resolve(null) : getFishByIdAdmin(id),
     getFishCategoriesAdmin(),
+    listFishAdmin(),
   ]);
   if (!isNew && !fish) notFound();
   const f = fish;
