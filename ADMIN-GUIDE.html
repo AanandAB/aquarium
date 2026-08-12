@@ -1,0 +1,366 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Happy Aquarium — Admin Panel Guide</title>
+<style>
+  :root {
+    --paper: #fffdf8;
+    --ink: #1a2e2a;
+    --teal: #0d5c55;
+    --teal-2: #0a7a6f;
+    --aqua: #22d3ee;
+    --clay: #d97b5c;
+    --clay-2: #c9664a;
+    --muted: #6b7c78;
+    --border: #e5e0d5;
+    --code-bg: #f4f1ea;
+  }
+  * { box-sizing: border-box; margin: 0; padding: 0; }
+  body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background: var(--paper);
+    color: var(--ink);
+    line-height: 1.65;
+    font-size: 16px;
+  }
+  .wrap { max-width: 860px; margin: 0 auto; padding: 40px 24px 80px; }
+  header.hero {
+    background: linear-gradient(135deg, #0d5c55 0%, #0a7a6f 60%, #22d3ee 140%);
+    color: #fff;
+    border-radius: 20px;
+    padding: 48px 40px;
+    margin-bottom: 36px;
+  }
+  header.hero h1 { font-size: 32px; font-weight: 700; letter-spacing: -0.5px; margin-bottom: 8px; }
+  header.hero p { opacity: 0.9; font-size: 17px; }
+  .badge {
+    display: inline-block; background: rgba(255,255,255,0.18);
+    padding: 4px 12px; border-radius: 20px; font-size: 13px; margin-top: 14px;
+  }
+  h2 {
+    font-size: 24px; margin: 44px 0 16px; padding-bottom: 10px;
+    border-bottom: 2px solid var(--border); color: var(--teal);
+  }
+  h3 { font-size: 19px; margin: 28px 0 10px; color: var(--teal-2); }
+  p { margin-bottom: 12px; }
+  .step {
+    background: #fff; border: 1px solid var(--border); border-left: 4px solid var(--aqua);
+    border-radius: 12px; padding: 16px 20px; margin: 14px 0;
+  }
+  .step b.num { color: var(--clay); font-weight: 700; }
+  ul, ol { margin: 8px 0 12px 24px; }
+  li { margin-bottom: 6px; }
+  code {
+    background: var(--code-bg); padding: 2px 7px; border-radius: 6px;
+    font-family: "SF Mono", Consolas, monospace; font-size: 14px; color: #b34700;
+  }
+  .tip, .warn, .info {
+    border-radius: 12px; padding: 14px 18px; margin: 16px 0;
+    font-size: 15px;
+  }
+  .tip { background: #e6f7f3; border: 1px solid #b7e4db; }
+  .warn { background: #fdf0e9; border: 1px solid #f4c9b4; }
+  .info { background: #eaf6fb; border: 1px solid #c3e4f2; }
+  .tip b { color: #0a7a6f; }
+  .warn b { color: #c9664a; }
+  .info b { color: #0d5c55; }
+  table { width: 100%; border-collapse: collapse; margin: 14px 0; }
+  th, td { text-align: left; padding: 10px 14px; border: 1px solid var(--border); font-size: 15px; }
+  th { background: #f4f1ea; color: var(--teal); font-weight: 600; }
+  .toc {
+    background: #fff; border: 1px solid var(--border); border-radius: 14px; padding: 20px 26px; margin-bottom: 20px;
+  }
+  .toc a { color: var(--teal); text-decoration: none; }
+  .toc a:hover { text-decoration: underline; }
+  .toc li { margin-bottom: 5px; }
+  .field-example {
+    background: var(--code-bg); border-radius: 10px; padding: 12px 16px;
+    font-family: "SF Mono", Consolas, monospace; font-size: 14px; white-space: pre-wrap;
+    margin: 10px 0;
+  }
+  .backtop { display: block; text-align: right; font-size: 13px; margin-top: 6px; }
+  .backtop a { color: var(--muted); text-decoration: none; }
+  @media (max-width: 600px) {
+    header.hero { padding: 32px 22px; }
+    header.hero h1 { font-size: 26px; }
+    .wrap { padding: 20px 14px 60px; }
+  }
+</style>
+</head>
+<body>
+<div class="wrap">
+
+<header class="hero">
+  <h1>🐠 Happy Aquarium — Admin Guide</h1>
+  <p>A complete, plain-English guide to managing your aquarium website.</p>
+  <span class="badge">No technical knowledge needed</span>
+</header>
+
+<div class="toc">
+  <h3 style="margin-top:0">What's inside</h3>
+  <ol>
+    <li><a href="#login">Logging in</a></li>
+    <li><a href="#dashboard">The dashboard</a></li>
+    <li><a href="#fish-add">Adding a fish</a></li>
+    <li><a href="#fish-edit">Editing / deleting a fish</a></li>
+    <li><a href="#images">Adding &amp; changing images</a></li>
+    <li><a href="#rate">Pair vs single pricing</a></li>
+    <li><a href="#variants">Variants (sizes, wattages, colour types)</a></li>
+    <li><a href="#products">Adding accessories / products</a></li>
+    <li><a href="#categories">Categories</a></li>
+    <li><a href="#offers">Offers &amp; discounts</a></li>
+    <li><a href="#homepage">Homepage sections</a></li>
+    <li><a href="#gallery">Gallery, testimonials &amp; FAQs</a></li>
+    <li><a href="#enquiries">Customer enquiries</a></li>
+    <li><a href="#settings">Store settings</a></li>
+    <li><a href="#password">Changing your password</a></li>
+    <li><a href="#tips">Tips &amp; troubleshooting</a></li>
+  </ol>
+</div>
+
+<!-- ======================= LOGIN ======================= -->
+<h2 id="login">1. Logging in</h2>
+<div class="step"><span class="num"><b>1.</b></span> Open your website and add <code>/admin/login</code> to the end of the address.</div>
+<p>For example, if your site is <code>https://happy-aquarium.workers.dev</code>, go to:</p>
+<div class="field-example">https://happy-aquarium.workers.dev/admin/login</div>
+<div class="step"><span class="num"><b>2.</b></span> Enter your email and password, then click <b>Sign in</b>.</div>
+<div class="info"><b>Default login</b> (change it after your first login):<br>Email: <code>admin@happyaquarium.in</code><br>Password: <code>admin123</code></div>
+<div class="warn"><b>First thing to do:</b> change this password. See <a href="#password">Changing your password</a>.</div>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= DASHBOARD ======================= -->
+<h2 id="dashboard">2. The dashboard</h2>
+<p>After logging in you'll see the <b>dashboard</b> — a summary page with live stats, recent enquiries, and low-stock alerts.</p>
+<p>On the left side (or top on mobile) is the <b>sidebar menu</b> with all sections:</p>
+<ul>
+  <li><b>Dashboard</b> — overview</li>
+  <li><b>Fish</b> — your fish catalogue</li>
+  <li><b>Products</b> — accessories &amp; equipment</li>
+  <li><b>Enquiries</b> — messages from customers</li>
+  <li><b>Offers</b> — discounts &amp; promotions</li>
+  <li><b>Blog</b> — articles</li>
+  <li><b>Gallery</b> — photos</li>
+  <li><b>Testimonials</b> — customer reviews</li>
+  <li><b>FAQs</b> — common questions</li>
+  <li><b>Categories</b> — group fish &amp; products</li>
+  <li><b>Homepage</b> — what shows on the front page</li>
+  <li><b>Settings</b> — store info, contact, socials</li>
+</ul>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= ADD FISH ======================= -->
+<h2 id="fish-add">3. Adding a fish</h2>
+<div class="step"><span class="num"><b>1.</b></span> Click <b>Fish</b> in the sidebar.</div>
+<div class="step"><span class="num"><b>2.</b></span> Click the <b>New fish</b> button (top right).</div>
+<div class="step"><span class="num"><b>3.</b></span> Fill in the form. Here's what each field means:</div>
+
+<table>
+  <tr><th>Field</th><th>What to type</th></tr>
+  <tr><td><b>Name</b></td><td>The fish name, e.g. "Guppy"</td></tr>
+  <tr><td><b>Slug</b></td><td>Leave blank — it auto-fills</td></tr>
+  <tr><td><b>Scientific name</b></td><td>Optional, e.g. "Poecilia reticulata"</td></tr>
+  <tr><td><b>Category</b></td><td>Pick from the dropdown (Tetras, Cichlids, etc.)</td></tr>
+  <tr><td><b>Short description</b></td><td>One line shown on cards</td></tr>
+  <tr><td><b>Origin</b></td><td>Where it comes from, e.g. "Amazon Basin"</td></tr>
+  <tr><td><b>Description</b></td><td>Full paragraph about the fish</td></tr>
+  <tr><td><b>Care guide</b></td><td>How to keep it healthy</td></tr>
+  <tr><td><b>Temp min / max</b></td><td>Ideal temperature range in °C</td></tr>
+  <tr><td><b>pH min / max</b></td><td>Water acidity range</td></tr>
+  <tr><td><b>Min tank size</b></td><td>In litres</td></tr>
+  <tr><td><b>Adult size</b></td><td>In cm</td></tr>
+  <tr><td><b>Lifespan, Diet</b></td><td>Plain text</td></tr>
+  <tr><td><b>Difficulty</b></td><td>Beginner / Intermediate / Advanced / Expert</td></tr>
+  <tr><td><b>Aggression</b></td><td>Peaceful / Semi-aggressive / Aggressive</td></tr>
+  <tr><td><b>Price</b></td><td>Regular price in ₹</td></tr>
+  <tr><td><b>Offer price</b></td><td>Sale price in ₹ (optional)</td></tr>
+  <tr><td><b>Stock</b></td><td>How many you have</td></tr>
+  <tr><td><b>Availability</b></td><td>Available / Low stock / Out of stock / Reserved</td></tr>
+</table>
+
+<div class="step"><span class="num"><b>4.</b></span> Scroll to the bottom and click <b>Create fish</b>.</div>
+<div class="tip"><b>Tip:</b> the more fields you fill, the better the fish page looks. At minimum fill Name, Category, Price, and add an image.</div>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= EDIT FISH ======================= -->
+<h2 id="fish-edit">4. Editing / deleting a fish</h2>
+<div class="step"><span class="num"><b>1.</b></span> Go to <b>Fish</b>.</div>
+<div class="step"><span class="num"><b>2.</b></span> Find the fish in the list. Click the <b>Edit</b> button on its row.</div>
+<div class="step"><span class="num"><b>3.</b></span> Change anything, then click <b>Save changes</b>.</div>
+<p>To hide a fish from the site without deleting it, toggle the <b>Published</b> checkbox (under "Flags") or click the <b>Live/Hidden</b> button in the list.</p>
+<p>To permanently remove a fish, click the red <b>Delete</b> button in the list.</p>
+<div class="warn"><b>Careful:</b> Delete is permanent and cannot be undone.</div>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= IMAGES ======================= -->
+<h2 id="images">5. Adding &amp; changing images</h2>
+<p>Every fish and product has an <b>image field</b>. You have two ways to add a picture:</p>
+<h3>Option A — Paste a link (fastest)</h3>
+<div class="step"><span class="num"><b>1.</b></span> In the edit form, find the <b>Hero image</b> / <b>Product image</b> field.</div>
+<div class="step"><span class="num"><b>2.</b></span> Paste a direct image URL (ends in .jpg, .png, .webp).</div>
+<p>Example:</p>
+<div class="field-example">https://example.com/images/my-fish.jpg</div>
+<h3>Option B — Upload from your phone/computer</h3>
+<div class="step"><span class="num"><b>1.</b></span> Click the <b>Upload</b> button next to the image field.</div>
+<div class="step"><span class="num"><b>2.</b></span> Choose the photo from your device.</div>
+<div class="step"><span class="num"><b>3.</b></span> It uploads and the field fills in automatically.</div>
+<div class="info"><b>Multiple images:</b> the <b>Gallery URLs</b> field lets you add extra photos — one URL per line.</div>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= RATE TYPE ======================= -->
+<h2 id="rate">6. Pair vs single pricing</h2>
+<p>Some fish are sold per <b>pair</b> (two fish), others per <b>single</b> fish.</p>
+<div class="step"><span class="num"><b>1.</b></span> Edit the fish.</div>
+<div class="step"><span class="num"><b>2.</b></span> Find the <b>Rate type</b> dropdown.</div>
+<div class="step"><span class="num"><b>3.</b></span> Choose <b>Pair</b> (price is for two fish) or <b>Single</b> (price is per fish).</div>
+<table>
+  <tr><th>Rate type</th><th>Use for</th></tr>
+  <tr><td><b>Pair</b></td><td>Guppies, mollies, tetras, most community fish</td></tr>
+  <tr><td><b>Single</b></td><td>Bettas, flowerhorns, alligator gar, snails, large predators</td></tr>
+</table>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= VARIANTS ======================= -->
+<h2 id="variants">7. Variants (sizes, wattages, colour types)</h2>
+<p>If one product or fish comes in <b>different versions</b> (like a light in 10W, 15W and 20W, or an alligator gar in different sizes), link them together as variants.</p>
+<h3>For accessories / products</h3>
+<div class="step"><span class="num"><b>1.</b></span> First create each version as its own product (e.g. "LED Light 10W", "LED Light 15W", "LED Light 20W").</div>
+<div class="step"><span class="num"><b>2.</b></span> Edit one of them (e.g. "LED Light 10W").</div>
+<div class="step"><span class="num"><b>3.</b></span> Find the <b>Variants</b> field — a searchable dropdown.</div>
+<div class="step"><span class="num"><b>4.</b></span> Click it, search for the other versions, and tick them.</div>
+<div class="step"><span class="num"><b>5.</b></span> Save. Now the 10W page shows "Also available in" with clickable cards for the 15W and 20W.</div>
+<h3>For fish</h3>
+<p>Same steps — edit a fish, use the <b>Variants</b> dropdown to pick other fish, save. They show as "Also available in" cards.</p>
+<div class="tip"><b>How it looks to customers:</b> a small grid of clickable cards, each with the variant's image, name and price. Tapping one opens that item's page.</div>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= PRODUCTS ======================= -->
+<h2 id="products">8. Adding accessories / products</h2>
+<div class="step"><span class="num"><b>1.</b></span> Click <b>Products</b> in the sidebar.</div>
+<div class="step"><span class="num"><b>2.</b></span> Click <b>New product</b>.</div>
+<div class="step"><span class="num"><b>3.</b></span> Fill in:</div>
+<table>
+  <tr><th>Field</th><th>What to type</th></tr>
+  <tr><td><b>Name</b></td><td>Product name, e.g. "2ft Starter Glass Aquarium"</td></tr>
+  <tr><td><b>Category</b></td><td>Aquariums, Filters, Lighting, Plants, Food, etc.</td></tr>
+  <tr><td><b>Price / Offer price</b></td><td>₹ amounts</td></tr>
+  <tr><td><b>Stock</b></td><td>Quantity available</td></tr>
+  <tr><td><b>Variants</b></td><td>Link other products as versions (see above)</td></tr>
+  <tr><td><b>Description</b></td><td>Full details</td></tr>
+  <tr><td><b>Product image</b></td><td>Upload or paste a photo</td></tr>
+</table>
+<div class="step"><span class="num"><b>4.</b></span> Click <b>Create product</b>.</div>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= CATEGORIES ======================= -->
+<h2 id="categories">9. Categories</h2>
+<p>Categories group your fish and products. The site already has these set up:</p>
+<ul>
+  <li><b>Fish:</b> Livebearers, Tetras, Cichlids, Goldfish &amp; Koi, Catfish &amp; Loaches, Bettas &amp; Gouramis, Sharks &amp; Suckers, Angelfish &amp; Oddballs, Snails &amp; Invertebrates</li>
+  <li><b>Products:</b> Aquariums, Filters, Air Pumps, Lighting, Plants, Decor, Food, Medicines, Water Conditioners, Gravel, Cleaning Tools</li>
+</ul>
+<div class="step"><span class="num"><b>1.</b></span> Click <b>Categories</b> in the sidebar.</div>
+<div class="step"><span class="num"><b>2.</b></span> To add a new category, use the form — give it a name, pick the type (Fish or Product), and save.</div>
+<div class="tip"><b>Tip:</b> a new category appears on the fish/products filter buttons automatically once it has items.</div>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= OFFERS ======================= -->
+<h2 id="offers">10. Offers &amp; discounts</h2>
+<div class="step"><span class="num"><b>1.</b></span> Click <b>Offers</b> in the sidebar.</div>
+<div class="step"><span class="num"><b>2.</b></span> Click <b>New offer</b>.</div>
+<div class="step"><span class="num"><b>3.</b></span> Fill in:</div>
+<table>
+  <tr><th>Field</th><th>What to type</th></tr>
+  <tr><td><b>Title</b></td><td>e.g. "Oscar Week"</td></tr>
+  <tr><td><b>Subtitle</b></td><td>Short line under the title</td></tr>
+  <tr><td><b>Discount text</b></td><td>e.g. "20% OFF" or "Up to ₹50 OFF"</td></tr>
+  <tr><td><b>CTA text / link</b></td><td>Button text and where it goes</td></tr>
+  <tr><td><b>Placement</b></td><td>Where the offer shows (hero strip, homepage banner, popup)</td></tr>
+  <tr><td><b>Start / End</b></td><td>When the offer runs (shows a countdown)</td></tr>
+</table>
+<div class="step"><span class="num"><b>4.</b></span> Keep <b>Active</b> checked, then save.</div>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= HOMEPAGE ======================= -->
+<h2 id="homepage">11. Homepage sections</h2>
+<p>The front page is built from <b>sections</b> you can reorder, edit or hide.</p>
+<div class="step"><span class="num"><b>1.</b></span> Click <b>Homepage</b> in the sidebar.</div>
+<div class="step"><span class="num"><b>2.</b></span> You'll see all sections: Hero, Featured Fish, Categories, Offers, Latest Arrivals, Popular Fish, Accessories, Gallery, Testimonials, Articles, Map, FAQ, Newsletter.</div>
+<div class="step"><span class="num"><b>3.</b></span> For each section you can:
+  <ul>
+    <li><b>Edit</b> the title and subtitle</li>
+    <li><b>Reorder</b> (change the number)</li>
+    <li><b>Hide</b> it (toggle off)</li>
+  </ul>
+</div>
+<div class="tip"><b>Example:</b> to remove the map from the homepage, find the "Map" section and hide it.</div>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= GALLERY / TESTIMONIALS / FAQ ======================= -->
+<h2 id="gallery">12. Gallery, testimonials &amp; FAQs</h2>
+<h3>Gallery</h3>
+<p>Add customer tank photos, store photos, aquascapes. Click <b>Gallery</b> → add a title, paste the image URL, pick a type (showcase, customer tank, etc.).</p>
+<h3>Testimonials</h3>
+<p>Add customer reviews with a name, star rating (1–5), review text, and location. Click <b>Testimonials</b> → New testimonial.</p>
+<h3>FAQs</h3>
+<p>Add common questions and answers. Click <b>FAQs</b> → add question + answer. These show in the FAQ section of the homepage.</p>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= ENQUIRIES ======================= -->
+<h2 id="enquiries">13. Customer enquiries</h2>
+<p>When someone fills the contact form or taps "Reserve on WhatsApp", the enquiry appears here.</p>
+<div class="step"><span class="num"><b>1.</b></span> Click <b>Enquiries</b> in the sidebar.</div>
+<div class="step"><span class="num"><b>2.</b></span> You'll see each enquiry with the customer's name, contact, and message.</div>
+<div class="step"><span class="num"><b>3.</b></span> Update the status as you deal with it: New → Contacted → Confirmed → Completed (or Cancelled).</div>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= SETTINGS ======================= -->
+<h2 id="settings">14. Store settings</h2>
+<p>This is where your store's core info lives.</p>
+<div class="step"><span class="num"><b>1.</b></span> Click <b>Settings</b> in the sidebar.</div>
+<div class="step"><span class="num"><b>2.</b></span> Update:</div>
+<ul>
+  <li><b>Store name</b> — your shop name</li>
+  <li><b>Phone / WhatsApp</b> — shown on every page's "Call" and "WhatsApp" buttons</li>
+  <li><b>Email</b></li>
+  <li><b>Address, area, city, state, pincode</b></li>
+  <li><b>Map coordinates</b> — for the "Visit our store" map</li>
+  <li><b>Opening hours</b></li>
+  <li><b>Social links</b> — Instagram, Facebook, YouTube, WhatsApp</li>
+</ul>
+<div class="warn"><b>Important:</b> the WhatsApp number must be in international format with the country code and no + sign. For India: <code>919947770808</code> (91 + 10-digit number).</div>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= PASSWORD ======================= -->
+<h2 id="password">15. Changing your password</h2>
+<div class="step"><span class="num"><b>1.</b></span> Click <b>Settings</b>.</div>
+<div class="step"><span class="num"><b>2.</b></span> Find the <b>Users</b> section.</div>
+<div class="step"><span class="num"><b>3.</b></span> Edit your user and enter a new password. Save.</div>
+<div class="tip"><b>Good password:</b> at least 12 characters, mix of letters, numbers and symbols. Don't use "admin123".</div>
+<div class="backtop"><a href="#">↑ top</a></div>
+
+<!-- ======================= TIPS ======================= -->
+<h2 id="tips">16. Tips &amp; troubleshooting</h2>
+<h3>Quick tips</h3>
+<ul>
+  <li><b>Save often.</b> Changes are live immediately after you click Save.</li>
+  <li><b>Add an image to everything.</b> Pages with photos get far more customer attention.</li>
+  <li><b>Use offer prices</b> to show a strike-through "was ₹X, now ₹Y" effect.</li>
+  <li><b>Keep stock numbers honest</b> — "Out of stock" is better than disappointing a customer.</li>
+</ul>
+<h3>Common problems</h3>
+<table>
+  <tr><th>Problem</th><th>Fix</th></tr>
+  <tr><td>I don't see my change</td><td>Refresh the page. If still missing, check the "Published" toggle is on.</td></tr>
+  <tr><td>Image won't upload</td><td>Try pasting the image URL instead, or use a smaller image file.</td></tr>
+  <tr><td>Fish not showing in a category</td><td>Edit the fish and check the Category dropdown is set.</td></tr>
+  <tr><td>Can't log in</td><td>Check the exact URL — it must end with <code>/admin/login</code>.</td></tr>
+  <tr><td>Variants not showing</td><td>Make sure you selected them in the Variants dropdown AND saved.</td></tr>
+</table>
+
+<div class="tip" style="margin-top:32px"><b>Need help?</b> Contact the person who set up this site, or refer to the <code>HANDOVER.md</code> file in the website's code folder.</div>
+
+</div>
+</body>
+</html>
