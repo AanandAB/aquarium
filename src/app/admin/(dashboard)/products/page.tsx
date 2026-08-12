@@ -219,8 +219,12 @@ export default async function AdminProducts({
               </Field>
             </div>
             <div className="mt-4">
-              <Field label="Varieties" hint="One per line: Label | Value (e.g. 10W | ₹550)">
-                <textarea name="varieties" rows={3} defaultValue={(p?.varieties ?? []).map((v: any) => [v.label, v.value].filter(Boolean).join(' | ')).join('\n')} className={inputCls} />
+              <Field label="Variants" hint="Select other products to show as size/wattage variants">
+                <VariantPicker
+                  name="variantIds"
+                  options={products.filter((pr) => pr.id !== p?.id).map((pr) => ({ id: pr.id, name: pr.name, slug: pr.slug }))}
+                  defaultValue={p?.variantIds ?? []}
+                />
               </Field>
             </div>
             <div className="mt-4">

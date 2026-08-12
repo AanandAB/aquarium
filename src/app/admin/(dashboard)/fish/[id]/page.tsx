@@ -127,8 +127,12 @@ export default async function FishForm({
 
         <section className="rounded-2xl glass p-5">
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-aqua">Varieties</h2>
-          <Field label="Variants" hint="One per line: Name | ₹Price | ₹OfferPrice">
-            <textarea name="varieties" rows={4} defaultValue={(f?.varieties ?? []).map((v: any) => [v.name, v.price, v.offerPrice].filter(Boolean).join(' | ')).join('\n')} className={inputCls} />
+          <Field label="Variants" hint="Select other fish to show as variants">
+            <VariantPicker
+              name="variantIds"
+              options={allFish.filter((x) => x.id !== f?.id).map((x) => ({ id: x.id, name: x.name, slug: x.slug }))}
+              defaultValue={f?.variantIds ?? []}
+            />
           </Field>
         </section>
 
