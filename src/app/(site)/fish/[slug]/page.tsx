@@ -11,7 +11,7 @@ import { Reveal } from "@/components/ui/Reveal";
 import { FishCard } from "@/components/cards/FishCard";
 import FishGallery from "@/components/fish/FishGallery";
 import {
-  getFishBySlug, getRelatedFish, getSiteSettings,
+  getFishBySlug, getRelatedFish, getSiteSettings, getFishByIds,
 } from "@/lib/queries";
 import {
   formatPrice, discountPct, whatsappHref, callHref,
@@ -72,6 +72,9 @@ export default async function FishDetailPage({
     getRelatedFish(fish, 4),
     getSiteSettings(),
   ]);
+  const variantFish = fish.variantIds?.length
+    ? await getFishByIds(fish.variantIds as string[])
+    : [];
   const whatsapp = settings?.whatsapp ?? SITE.whatsapp;
   const phone = settings?.phone ?? SITE.phone;
 
@@ -244,6 +247,20 @@ export default async function FishDetailPage({
             </div>
           </Reveal>
         </div>
+
+        {/* Linked variant fish */}
+        {variantFish.length > 0 && (
+          <div className="mt-16">
+            <h2 className="mb-6 text-2xl font-semibold text-ink">
+              Also available in
+            </h2>
+            <div className="grid grid-cols-2 gap-4 md:grid-cols-4">
+              {variantFish.map((vf) => (
+                <FishCard key={vf.id} fish={vf} whatsapp={whatsapp} />
+              ))}
+            </div>
+          </div>
+        )}
 
         {/* Related */}
         {related.length > 0 && (

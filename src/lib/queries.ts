@@ -11,6 +11,7 @@ import {
   lte,
   ne,
   or,
+  inArray,
   getTableColumns,
 } from "drizzle-orm";
 
@@ -244,8 +245,8 @@ export async function getProductBySlug(slug: string): Promise<ProductCard | null
   return row ?? null;
 }
 
-export async function getProductsBySlugs(slugs: string[]): Promise<ProductCard[]> {
-  if (!slugs.length) return [];
+export async function getProductsByIds(ids: string[]): Promise<ProductCard[]> {
+  if (!ids.length) return [];
   const db = getDb();
   return db.select({
     ...getTableColumns(s.products),
@@ -253,7 +254,21 @@ export async function getProductsBySlugs(slugs: string[]): Promise<ProductCard[]
     categorySlug: s.categories.slug,
   }).from(s.products)
     .leftJoin(s.categories, eq(s.products.categoryId, s.categories.id))
-    .where(and(eq(s.products.published, true), ...slugs.map(slug => eq(s.products.slug, slug)) as any))
+    .where(and(eq(s.products.published, true), inArray(s.products.id, ids)))
+    .limit(20);
+}
+
+export async function getFishByIds(ids: string[]): Promise<FishCard[]> {
+  if (!ids.length) return [];
+  const db = getDb();
+  return db.select({
+    ...getTableColumns(s.fish),
+    categoryName: s.categories.name,
+    categorySlug: s.categories.slug,
+    categoryColor: s.categories.color,
+  }).from(s.fish)
+    .leftJoin(s.categories, eq(s.fish.categoryId, s.categories.id))
+    .where(and(eq(s.fish.published, true), inArray(s.fish.id, ids)))
     .limit(20);
 }
 

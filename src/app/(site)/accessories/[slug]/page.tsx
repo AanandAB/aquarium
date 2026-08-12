@@ -7,7 +7,7 @@ import { Container, Badge, Button } from "@/components/ui/primitives";
 import { Reveal } from "@/components/ui/Reveal";
 import { ProductCard } from "@/components/cards/ProductCard";
 import FishGallery from "@/components/fish/FishGallery";
-import { getProductBySlug, getProductList, getProductsBySlugs, getSiteSettings } from "@/lib/queries";
+import { getProductBySlug, getProductList, getProductsByIds, getSiteSettings } from "@/lib/queries";
 import {
   formatPrice, discountPct, whatsappHref, callHref, AVAILABILITY_LABELS,
 } from "@/lib/utils";
@@ -49,7 +49,7 @@ export default async function ProductDetailPage({
   const phone = settings?.phone ?? SITE.phone;
   const related = catProducts.filter((p) => p.id !== product.id).slice(0, 4);
   const variantProducts = product.variantIds?.length
-    ? await getProductsBySlugs(product.variantIds as string[])
+    ? await getProductsByIds(product.variantIds as string[])
     : [];
 
   const off = discountPct(product.price, product.offerPrice);
