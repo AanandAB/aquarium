@@ -218,6 +218,12 @@ export default async function AdminProducts({
               </Field>
             </div>
             <div className="mt-4">
+              <Field label="Varieties" hint="One per line: Label | Value (e.g. 10W | ₹550)">
+                <textarea name="varieties" rows={3} defaultValue={(p?.varieties ?? []).map((v: any) => [v.label, v.value].filter(Boolean).join(' | ')).join('
+')} className={inputCls} />
+              </Field>
+            </div>
+            <div className="mt-4">
               <Field label="Description">
                 <textarea name="description" rows={4} defaultValue={p?.description ?? ""} className={inputCls} />
               </Field>

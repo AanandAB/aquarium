@@ -146,6 +146,25 @@ export default async function ProductDetailPage({
                 </table>
               </div>
             )}
+
+            {/* Varieties */}
+            {product.varieties && product.varieties.length > 0 && (
+              <div className="mt-5">
+                <p className="mb-2 text-xs uppercase tracking-wide text-ink/60">
+                  Available variants
+                </p>
+                <div className="flex flex-wrap gap-2">
+                  {(product.varieties as {label:string;value:string}[]).map((v, i) => (
+                    <span
+                      key={i}
+                      className="rounded-full border border-aqua/30 bg-aqua/10 px-3 py-1 text-xs text-aqua"
+                    >
+                      {v.label}{v.value ? ' — ' + v.value : ''}
+                    </span>
+                  ))}
+                </div>
+              </div>
+            )}
           </Reveal>
         </div>
 

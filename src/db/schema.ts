@@ -303,6 +303,7 @@ export const products = sqliteTable(
     availability: text("availability", { enum: AVAILABILITY }).default(
       "available",
     ),
+    varieties: text("varieties", { mode: "json" }).$type<SpecItem[]>(),
     heroImage: text("hero_image"),
     gallery: text("gallery", { mode: "json" }).$type<string[]>(),
     video: text("video"),

@@ -124,6 +124,14 @@ export default async function FishForm({
         </section>
 
         <section className="rounded-2xl glass p-5">
+          <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-aqua">Varieties</h2>
+          <Field label="Variants" hint="One per line: Name | ₹Price | ₹OfferPrice">
+            <textarea name="varieties" rows={4} defaultValue={(f?.varieties ?? []).map((v: any) => [v.name, v.price, v.offerPrice].filter(Boolean).join(' | ')).join('
+')} className={inputCls} />
+          </Field>
+        </section>
+
+        <section className="rounded-2xl glass p-5">
           <h2 className="mb-4 text-sm font-semibold uppercase tracking-wide text-aqua">Media</h2>
           <div className="grid gap-4">
             <ImageField name="heroImage" label="Hero image" defaultValue={f?.heroImage ?? ""} hint="Paste a URL, or upload a photo from your device" />

@@ -127,6 +127,15 @@ export async function saveFish(formData: FormData): Promise<void> {
     gallery: lines(formData, "gallery"),
     video: str(formData, "video"),
     tags: lines(formData, "tags"),
+    varieties: (() => {
+      const raw = str(formData, "varieties");
+      if (!raw) return null;
+      return raw.split("
+").filter(Boolean).map(line => {
+        const parts = line.split("|").map(s => s.trim());
+        return { name: parts[0] || "", price: parts[1] ? Number(parts[1]) : undefined, offerPrice: parts[2] ? Number(parts[2]) : undefined };
+      });
+    })(),
     featured: bool(formData, "featured"),
     trending: bool(formData, "trending"),
     isImported: bool(formData, "isImported"),
@@ -384,6 +393,15 @@ export async function savePost(formData: FormData): Promise<void> {
     author: str(formData, "author"),
     categoryId: str(formData, "categoryId"),
     tags: lines(formData, "tags"),
+    varieties: (() => {
+      const raw = str(formData, "varieties");
+      if (!raw) return null;
+      return raw.split("
+").filter(Boolean).map(line => {
+        const parts = line.split("|").map(s => s.trim());
+        return { name: parts[0] || "", price: parts[1] ? Number(parts[1]) : undefined, offerPrice: parts[2] ? Number(parts[2]) : undefined };
+      });
+    })(),
     featured: bool(formData, "featured"),
     status: (isPublished ? "published" : "draft") as never,
     publishedAt,
