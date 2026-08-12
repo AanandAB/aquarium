@@ -100,6 +100,8 @@ export function FishCard({
               )}
             </div>
             <span className="mt-0.5 inline-flex items-center gap-1 text-[11px] text-ink/50">
+              {fish.rateType === "single" ? "per fish" : "per pair"}
+              <span className="text-ink/30">·</span>
               <span className={cn("h-1.5 w-1.5 rounded-full", availTone[fish.availability ?? "available"])} />
               {AVAILABILITY_LABELS[fish.availability ?? "available"]}
             </span>

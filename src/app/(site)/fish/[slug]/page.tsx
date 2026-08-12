@@ -164,6 +164,9 @@ export default async function FishDetailPage({
               <span className="font-num text-4xl font-bold text-ink">
                 {formatPrice(price, fish.currency)}
               </span>
+              <span className="mb-1 text-sm font-medium text-ink/55">
+                {fish.rateType === "single" ? "per fish" : "per pair"}
+              </span>
               {off > 0 && (
                 <>
                   <span className="font-num text-xl text-ink/45 line-through">
